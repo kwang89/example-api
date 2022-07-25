@@ -1,6 +1,5 @@
 package com.example.api.configuration;
 
-import java.sql.Time;
 import java.util.Locale;
 import java.util.TimeZone;
 
