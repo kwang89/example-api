@@ -1,11 +1,12 @@
 # example-api
 
-* [Jackson2ObjectMapperBuilderCustomizer](#jackson2objectmapperbuildercustomizer)
-* [LogBack](#logback)
+- [Jackson2ObjectMapperBuilderCustomizer](#jackson2objectmapperbuildercustomizer)
+- [LogBack](#logback)
+- [Exception 처리](#exception-처리)
 
 ## Jackson2ObjectMapperBuilderCustomizer
 
-* Serialization
+- Serialization
   |구분|제외여부|
   |---|---|
   |null|제외|
@@ -13,21 +14,21 @@
   |Array|size() == 0인 경우 제외|
   |String|length == 0 인 경우 제외|
 
-* 날짜 및 시간 Serialization & Deserialization : [JavaTimeModule](https://fasterxml.github.io/jackson-modules-java8/javadoc/datetime/2.9/com/fasterxml/jackson/datatype/jsr310/JavaTimeModule.html)
+- 날짜 및 시간 Serialization & Deserialization : [JavaTimeModule](https://fasterxml.github.io/jackson-modules-java8/javadoc/datetime/2.9/com/fasterxml/jackson/datatype/jsr310/JavaTimeModule.html)
 
 ## LogBack
 
 > 아래 내용들은 logback-spring.xml에 직접 설정해도 되지만 application.yml에서 전부 관리하는게 편하지 않을까 하는 생각에 정리
 
-* ConsoleAppender  
+- ConsoleAppender  
   |application.yml|logback-spring.xml|설명|Default 값|
   |---|---|:---|:---|
-  |logging.pattern.console|CONSOLE_LOG_PATTERN|콘솔에서 사용할 로그 패턴|_${LOG_DATEFORMAT_PATTERN}_ _${LOG_LEVEL_PATTERN}_ ${PID} - [%t] %logger{20} : %m%n|
+  |logging.pattern.console|CONSOLE_LOG_PATTERN|콘솔에서 사용할 로그 패턴|_${LOG_DATEFORMAT_PATTERN}_ _${LOG*LEVEL_PATTERN}_ ${PID} - [%t] %logger{20} : %m%n|
   |logging.pattern.dateformat|LOG_DATEFORMAT_PATTERN|로그 날짜 포맷에 사용할 Appender 패턴|yyyy-MM-dd'T'HH:mm:ss.SSS|
   |logging.pattern.level|LOG_LEVEL_PATTERN|로그 레벨을 렌더링할 때 사용할 포맷|%.-1p|
   |PID|PID|현재 프로세스 ID||
   |logging.exception-conversion-word|LOG_EXCEPTION_CONVERSION_WORD|예외를 로킹할 떄 사용할 conversionword|%wEx|
-* FileAppender  
+- FileAppender  
   |application.yml|logback-spring.xml|설명|Default 값|
   |---|---|:---|:---|
   |logging.pattern.file|FILE_LOG_PATTERN|파일에서 사용할 로그 패턴|_${LOG_DATEFORMAT_PATTERN}_ _${LOG_LEVEL_PATTERN}_ ${PID} - [%t] %logger{20} : %m%n|
@@ -43,3 +44,66 @@
   |logging.logback.rollingpolicy.max-file-size|LOGBACK_ROLLINGPOLICY_MAX_FILE_SIZE|로그 파일을 아카이빙하기 전 최대 사이즈|10MB|
   |logging.logback.rollingpolicy.total-size-cap|LOGBACK_ROLLINGPOLICY_TOTAL_SIZE_CAP|로그 아카이브 파일들의 최대 용량|0|
   |logging.logback.rollingpolicy.max-history|LOGBACK_ROLLINGPOLICY_MAX_HISTORY|로그 아카이브를 유지할 일수|7|
+
+## Exception 처리
+> ErrorResponse Format 또는 `GlobalExceptionHandler`에 정의되어 있는 예외처리는 모두 상황에 맞게 바꿔서 사용 필요.
+
+### Throw NoHandlerFoundException 설정
+
+- 404 에러 발생 시, 기본 whitelabel 에러페이지 대신 NoHandlerFoundException을 throw하여 처리하도록 설정
+  ```yml
+  spring:
+    mvc:
+      # dispatcherServlet에서 알맞은 handler를 찾을 수 없을 때 NoHandlerFoundExcpetion throw
+      throw-exception-if-no-handler-found: true
+    web:
+      resources:
+        add-mappings: false # 기본 resouce handler disabled
+  ```
+
+### ErrorResponse Format
+
+> 에러의 응답형태는 항상 일정하도록 Class를 선언한다. `ErrorResponse.java` 참조
+
+- Json형식으로 Return되며 Format은 아래와 같다.
+  ```json
+  {
+    "errorCode": "error-000001", // 필수
+    "errorMessage": "Unkwon Error" // 필수
+    "meesage": "화면에 보이는 메세지", // Optional
+    "data": { // Optional, 해당 포맷은 일정하지 않음
+      "name": "test",
+      "age": "99"
+    },
+    "errors": [ // Optional
+      {
+        ...
+      }
+    ]
+  }
+  ```
+- ErrorResponse 속성
+  | Type | Name | Required | Description |
+  | ------------ | ------------ | -------- | :------------------------------- |
+  | String | errorCode | Y | 에러코드 |
+  | String | errorMessage | Y | 에러메시지 |
+  | String | message | N | 화면에 보여줄 메시지 |
+  | Object | data | N | 에러발생 시 전달한 데이터 |
+  | List<String> | errors | N | `@Valid`로 검증실패 한 에러 목록 |
+
+### Exception처리 클래스 : GlobalExceptionHandler(@RestControllerAdvice)
+- `@RestControllerAdvice`을 적용하여 Exception을 처리
+- `ResponseEntityExceptionHandler`를 상속받아서 기본적인 Spring MVC 예외처리.
+  > `GlobalExceptionHandler`에 구현되어 있는 에러처리 소스는 `ResponseEntityExceptionHandler` 그대로 옮겨서 overriding함. 필요 시 수정하여 사용
+- 현재 처리 중인 Exception 목록
+  1. [`ResponseEntityExceptionHandler`](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/servlet/mvc/method/annotation/ResponseEntityExceptionHandler.html) : 참조
+  2. `ApiException.java` : HttpStatus default 값은 500, 다른 status로 변경 가능
+  3. `BadRequestException.java` : HttpStatus 400 으로 고정한 exception
+  4. `NotFoundException.java` : HttpStatus 404 으로 고정한 exception
+
+### ErrorCode 정의
+- `BaseErrorCode` interface를 implements 하여 enum 클래스로 정의(참조 : `GlobalErrorCode`)
+- enum 사용하는 이유(일단 이렇게 생각...)
+  1. 자동완성/오타 등 IDE 지원을 받을 수 있음.
+  2. ErrorCode의 허용 가능한 값을 제어할 수 있음
+  3. 코드 변경 시, 변경 범위를 최소할 수 있음.
