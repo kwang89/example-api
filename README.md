@@ -4,6 +4,20 @@
 - [LogBack](#logback)
 - [Exception 처리](#exception-처리)
 
+## TODO
+1. DTO Serialize/Deserialize 확인
+2. DTO ToString, EqualandHash 등 공통 method 
+3. 로깅 시, masking처리(annotation, logback masking 등)
+4. Sample CRUD
+5. 시작 시, 필요 데이터 로딩(H2)
+6. 화면 메시지 처리(DB로 관리 가능하도록, Redis 활용하여 캐싱)
+7. restdoc, swagger plugin
+8. junit5 테스트 코드 샘플
+9. redis 등 필요한 항목 docker로 올릴 수 있도록 docker-compose 파일
+10. Dockerfile
+11. github ci/cd pipeline
+
+
 ## Jackson2ObjectMapperBuilderCustomizer
 
 - Serialization
