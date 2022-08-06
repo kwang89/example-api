@@ -10,9 +10,8 @@ import lombok.Getter;
 /**
  * {@code BaseException} 클래스를 상속받아서 CustomException을 정의
  *
- * @see ApiException
- * 
  * @author sk.kwon
+ * @see ApiException
  */
 
 @Getter
@@ -23,6 +22,9 @@ public class BaseException extends RuntimeException {
   public BaseException(GlobalErrorCode errorCode) {
     this(HttpStatus.INTERNAL_SERVER_ERROR, errorCode);
   }
+  public BaseException(GlobalErrorCode errorCode, Exception e) {
+    this(HttpStatus.INTERNAL_SERVER_ERROR, errorCode, e);
+  }
 
   public BaseException(int statusCode, GlobalErrorCode errorCode) {
     this(HttpStatus.valueOf(statusCode), errorCode);
@@ -30,7 +32,7 @@ public class BaseException extends RuntimeException {
 
   public BaseException(int statusCode, GlobalErrorCode errorCode, Exception e) {
     super(e);
-    this.httpStatus = HttpStatus.valueOf(statusCode)
+    this.httpStatus = HttpStatus.valueOf(statusCode);
     this.errorCode = errorCode;
   }
 

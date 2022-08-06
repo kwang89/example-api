@@ -11,7 +11,7 @@ import lombok.Getter;
  * BadRequestException
  * <p>
  * HttpStatusCode : 400 - BadRequest
- * 
+ *
  * @author sk.kwon
  */
 @Getter

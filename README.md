@@ -82,17 +82,15 @@
 - Json형식으로 Return되며 Format은 아래와 같다.
   ```json
   {
-    "errorCode": "error-000001", // 필수
-    "errorMessage": "Unkwon Error" // 필수
-    "meesage": "화면에 보이는 메세지", // Optional
-    "data": { // Optional, 해당 포맷은 일정하지 않음
+    "errorCode": "error-000001",
+    "errorMessage": "Unkwon Error",
+    "meesage": "화면에 보이는 메세지",
+    "data": {
       "name": "test",
       "age": "99"
     },
-    "errors": [ // Optional
-      {
-        ...
-      }
+    "errors": [
+      {}
     ]
   }
   ```

@@ -9,7 +9,7 @@ import lombok.Getter;
 
 /**
  * CustomException : {@code ErrorCode}를 사용하여 정의
- * 
+ *
  * @author sk.kwon
  */
 @Getter
@@ -19,6 +19,10 @@ public class ApiException extends BaseException {
 
   public ApiException(GlobalErrorCode errorCode) {
     super(errorCode);
+  }
+
+  public ApiException(GlobalErrorCode errorCode, Exception e) {
+    super(errorCode, e);
   }
 
   public ApiException(GlobalErrorCode errorCode, Object data) {

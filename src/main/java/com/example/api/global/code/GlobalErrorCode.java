@@ -27,8 +27,11 @@ public enum GlobalErrorCode implements BaseErrorCode {
   HTTP_MESSAGE_NOT_WRITABLE("error-000011", "Http Message Not Writable"),
   METHOD_ARGUMENT_NOT_VALID("error-000012", "Method Argument Not Valid"),
   MISSING_SERVLET_REQUEST_PART("error-000013", "Missing Servlet Request Part"),
-  BIND_ERROR("error-000014", "Bind Error"), NO_HANDLER_FOUND("error-000015", "Api Not Found"),
-  ASYNC_REQUEST_TIMEOUT("error-000016", "Async Request Timeout"), SAMPLE_ERROR("sample-0000001", "sample error");
+  BIND_ERROR("error-000014", "Bind Error"),
+  NO_HANDLER_FOUND("error-000015", "Api Not Found"),
+  ASYNC_REQUEST_TIMEOUT("error-000016", "Async Request Timeout"),
+  ILLEGAL_ACCESS("error-000017", "Illegal Access"),
+  SAMPLE_ERROR("sample-000001", "sample error");
 
   private final String errorCode;
   private final String errorMessage;

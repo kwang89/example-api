@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.example.api.global.code.GlobalErrorCode;
 
-import lombok.AllArgsConstructor;
+import com.example.api.global.dto.BaseDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,13 +15,10 @@ import lombok.Setter;
  * 
  * @author sk.kwon
  */
-
-@Builder
-@AllArgsConstructor
 @Setter
 @Getter
 @NoArgsConstructor
-public class ErrorResponse {
+public class ErrorResponse extends BaseDto {
   /** 에러코드 */
   private String errorCode;
   /** 에러메시지 */
@@ -41,5 +38,13 @@ public class ErrorResponse {
   public ErrorResponse(GlobalErrorCode errorCode, String message) {
     this(errorCode);
     this.message = message;
+  }
+  @Builder
+  public ErrorResponse(String errorCode, String errorMessage, String message, List<String> errors, Object data) {
+    this.errorCode = errorCode;
+    this.errorMessage = errorMessage;
+    this.message = message;
+    this.errors = errors;
+    this.data = data;
   }
 }
