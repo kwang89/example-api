@@ -1,6 +1,7 @@
 package com.example.api.domain.sample;
 
 import com.example.api.dto.ExampleDto;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.api.global.code.GlobalErrorCode;
 import com.example.api.global.exception.ApiException;
 @Slf4j
+@RequiredArgsConstructor
 @RestController
 public class SampleController {
   @GetMapping("/exception")
@@ -23,6 +25,8 @@ public class SampleController {
     dto.setTestNm("testNm");
 
     log.info(dto.toString());
+    log.info("test : {}", dto);
+
     return dto;
   }
 }
