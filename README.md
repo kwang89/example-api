@@ -3,6 +3,7 @@
 - [Jackson2ObjectMapperBuilderCustomizer](#jackson2objectmapperbuildercustomizer)
 - [LogBack](#logback)
 - [Exception 처리](#exception-처리)
+- [Masking](#Masking)
 
 ## TODO
 1. DTO Serialize/Deserialize 확인
@@ -121,21 +122,21 @@
   3. 코드 변경 시, 변경 범위를 최소할 수 있음.
 
 ## Masking
-1. BaseDto 상속 필요 
-- ToString을 제어하여 지정한 Field를 출력하지 않음
-2.  Annotation 생성
-- @MaskingField : masking하려는 field 위에 선언 
+1. BaseDto 상속 필요
+   - ToString을 제어하여 지정한 Field를 출력하지 않음
+2. Annotation 생성 
+   - `@MaskingField` : masking하려는 field 위에 선언 
 3. ToString
-- apache common lang3 라이브러리 추가
-- ReflectionToStringBuilder를 상속받아서 MaskingToStringBuilder 구현
-- @MaskingField가 붙은 field는 출력하지 않음
+   - apache common lang3 라이브러리 추가
+   - `ReflectionToStringBuilder`를 상속받아서 `MaskingToStringBuilder` 구현
+   - `@MaskingField`가 붙은 field는 출력하지 않음
 4. Logback도 ToString으로 Object 출력하는 듯??
-```java
-ExampleDto dto = new ExampleDto();
-dto.setAge(1);
-dto.setLongData(5L);
-dto.setTestNm("testNm"); // @MaskingField 선언
+   ```java
+    ExampleDto dto = new ExampleDto();
+    dto.setAge(1);
+    dto.setLongData(5L);
+    dto.setTestNm("testNm"); // @MaskingField 선언
 
-log.info(dto.toString()); // {"testNm":"******","age":1,"longData":5}
-log.info("test : {}", dto); // test : {"testNm":"******","age":1,"longData":5}
-```
+    log.info(dto.toString()); // {"testNm":"******","age":1,"longData":5}
+    log.info("test : {}", dto); // test : {"testNm":"******","age":1,"longData":5}
+    ```
