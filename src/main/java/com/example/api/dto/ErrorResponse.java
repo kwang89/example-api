@@ -2,8 +2,7 @@ package com.example.api.dto;
 
 import java.util.List;
 
-import com.example.api.global.code.GlobalErrorCode;
-
+import com.example.api.global.code.base.BaseErrorCode;
 import com.example.api.global.dto.BaseDto;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,12 +29,12 @@ public class ErrorResponse extends BaseDto {
   /** data(Optional) */
   private Object data;
 
-  public ErrorResponse(GlobalErrorCode errorCode) {
+  public ErrorResponse(BaseErrorCode errorCode) {
     this.errorCode = errorCode.getErrorCode();
     this.errorMessage = errorCode.getErrorMessage();
   }
 
-  public ErrorResponse(GlobalErrorCode errorCode, String message) {
+  public ErrorResponse(BaseErrorCode errorCode, String message) {
     this(errorCode);
     this.message = message;
   }

@@ -4,6 +4,7 @@
 - [LogBack](#logback)
 - [Exception 처리](#exception-처리)
 - [Masking](#Masking)
+- [JPA](#JPA)
 
 ## TODO
 1. DTO Serialize/Deserialize 확인
@@ -124,6 +125,7 @@
 ## Masking
 1. BaseDto 상속 필요
    - ToString을 제어하여 지정한 Field를 출력하지 않음
+   - JSON 형태로 출력 : `org.apache.commons.lang3.builder.ToStringStyle` 참조
 2. Annotation 생성 
    - `@MaskingField` : masking하려는 field 위에 선언 
 3. ToString
@@ -140,3 +142,9 @@
     log.info(dto.toString()); // {"testNm":"******","age":1,"longData":5}
     log.info("test : {}", dto); // test : {"testNm":"******","age":1,"longData":5}
     ```
+## JPA
+- 학습 필요
+  - hibornate vs spring data jpa 차이점
+  - jpa persistence
+  - JPA 동작 구조
+  - 복잡한 쿼리 보조 : queryDsl?

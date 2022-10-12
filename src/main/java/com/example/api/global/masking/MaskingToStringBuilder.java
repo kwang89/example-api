@@ -2,8 +2,7 @@ package com.example.api.global.masking;
 
 import com.example.api.constant.CharacterConstant;
 import com.example.api.global.code.GlobalErrorCode;
-import com.example.api.global.exception.ApiException;
-import org.apache.commons.lang3.StringUtils;
+import com.example.api.global.exception.InternalServerErrorException;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -54,7 +53,7 @@ public class MaskingToStringBuilder extends ReflectionToStringBuilder {
             this.append(fieldName, fieldValue);
           }
         } catch (final IllegalAccessException ex) {
-          throw new ApiException(GlobalErrorCode.ILLEGAL_ACCESS, ex);
+          throw new InternalServerErrorException(GlobalErrorCode.ILLEGAL_ACCESS, ex);
         }
       }
     }

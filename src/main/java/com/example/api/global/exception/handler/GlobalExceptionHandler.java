@@ -6,7 +6,9 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletResponse;
 
-import com.example.api.global.exception.NotFoundException;
+import com.example.api.global.code.base.BaseErrorCode;
+import com.example.api.global.exception.*;
+import com.example.api.global.exception.base.BaseException;
 import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
@@ -38,8 +40,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import com.example.api.dto.ErrorResponse;
 import com.example.api.global.code.GlobalErrorCode;
-import com.example.api.global.exception.ApiException;
-import com.example.api.global.exception.BadRequestException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -72,26 +72,20 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
   private ResponseEntity<Object> handleUnknownException(Exception ex, WebRequest request) {
     log.error("handleException : {0}", ex);
     HttpHeaders headers = new HttpHeaders();
-    return super.handleExceptionInternal(ex, createErrorResponse(UNKNOWN_ERROR), headers,
-      HttpStatus.INTERNAL_SERVER_ERROR, request);
+    return super.handleExceptionInternal(ex, createErrorResponse(UNKNOWN_ERROR), headers, HttpStatus.INTERNAL_SERVER_ERROR, request);
   }
 
   /**
-   * ApiException
    * BadRequestException
    *
    * @param ex      the target exception
    * @param request the current request
    * @return Error Response Object
-   * @see com.example.api.global.exception.ApiException
-   * @see com.example.api.global.exception.BadRequestException
-   * @see com.example.api.global.exception.NotFoundException
+   * @see BadRequestException
    */
-  @ExceptionHandler({
-    ApiException.class, BadRequestException.class, NotFoundException.class
-  })
-  protected ResponseEntity<Object> handleCustomException(ApiException ex, WebRequest request) {
-    log.error("handleCustomException : {0}", ex);
+  @ExceptionHandler(BadRequestException.class)
+  protected ResponseEntity<Object> handleBadRequestException(BadRequestException ex, WebRequest request) {
+    log.error("handleBadRequestException : {0}", ex);
     HttpHeaders headers = new HttpHeaders();
 
     ErrorResponse errorResponse = createErrorResponse(ex.getErrorCode());
@@ -100,9 +94,117 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
       errorResponse.setData(ex.getData());
     }
 
-    return super.handleExceptionInternal(ex,
-      errorResponse, headers, ex.getHttpStatus(),
-      request);
+    return super.handleExceptionInternal(ex, errorResponse, headers, ex.getHttpStatus(), request);
+  }
+
+  /**
+   * UnAuthorizedException
+   *
+   * @param ex      the target exception
+   * @param request the current request
+   * @return Error Response Object
+   * @see UnAuthorizedException
+   */
+  @ExceptionHandler(UnAuthorizedException.class)
+  protected ResponseEntity<Object> handleUnAuthorizedException(UnAuthorizedException ex, WebRequest request) {
+    log.error("handleUnAuthorizedException : {0}", ex);
+    HttpHeaders headers = new HttpHeaders();
+
+    ErrorResponse errorResponse = createErrorResponse(ex.getErrorCode());
+
+    if (!ObjectUtils.isEmpty(ex.getData())) {
+      errorResponse.setData(ex.getData());
+    }
+
+    return super.handleExceptionInternal(ex, errorResponse, headers, ex.getHttpStatus(), request);
+  }
+
+  /**
+   * ForbiddenException
+   *
+   * @param ex      the target exception
+   * @param request the current request
+   * @return Error Response Object
+   * @see ForbiddenException
+   */
+  @ExceptionHandler(ForbiddenException.class)
+  protected ResponseEntity<Object> handleForbiddenException(ForbiddenException ex, WebRequest request) {
+    log.error("handleForbiddenException : {0}", ex);
+    HttpHeaders headers = new HttpHeaders();
+
+    ErrorResponse errorResponse = createErrorResponse(ex.getErrorCode());
+
+    if (!ObjectUtils.isEmpty(ex.getData())) {
+      errorResponse.setData(ex.getData());
+    }
+
+    return super.handleExceptionInternal(ex, errorResponse, headers, ex.getHttpStatus(), request);
+  }
+
+  /**
+   * NotFoundException
+   *
+   * @param ex      the target exception
+   * @param request the current request
+   * @return Error Response Object
+   * @see NotFoundException
+   */
+  @ExceptionHandler(NotFoundException.class)
+  protected ResponseEntity<Object> handleNotFoundException(NotFoundException ex, WebRequest request) {
+    log.error("handleNotFoundException : {0}", ex);
+    HttpHeaders headers = new HttpHeaders();
+
+    ErrorResponse errorResponse = createErrorResponse(ex.getErrorCode());
+
+    if (!ObjectUtils.isEmpty(ex.getData())) {
+      errorResponse.setData(ex.getData());
+    }
+
+    return super.handleExceptionInternal(ex, errorResponse, headers, ex.getHttpStatus(), request);
+  }
+
+  /**
+   * ConflictException
+   *
+   * @param ex      the target exception
+   * @param request the current request
+   * @return Error Response Object
+   * @see ConflictException
+   */
+  @ExceptionHandler(ConflictException.class)
+  protected ResponseEntity<Object> handleConflictException(ConflictException ex, WebRequest request) {
+    log.error("handleConflictException : {0}", ex);
+    HttpHeaders headers = new HttpHeaders();
+
+    ErrorResponse errorResponse = createErrorResponse(ex.getErrorCode());
+
+    if (!ObjectUtils.isEmpty(ex.getData())) {
+      errorResponse.setData(ex.getData());
+    }
+
+    return super.handleExceptionInternal(ex, errorResponse, headers, ex.getHttpStatus(), request);
+  }
+
+  /**
+   * InternalServerErrorExeption
+   *
+   * @param ex      the target exception
+   * @param request the current request
+   * @return Error Response Object
+   * @see InternalServerErrorException
+   */
+  @ExceptionHandler(InternalServerErrorException.class)
+  protected ResponseEntity<Object> handleInternalServerErrorException(InternalServerErrorException ex, WebRequest request) {
+    log.error("handleInternalServerErrorException : {0}", ex);
+    HttpHeaders headers = new HttpHeaders();
+
+    ErrorResponse errorResponse = createErrorResponse(ex.getErrorCode());
+
+    if (!ObjectUtils.isEmpty(ex.getData())) {
+      errorResponse.setData(ex.getData());
+    }
+
+    return super.handleExceptionInternal(ex, errorResponse, headers, ex.getHttpStatus(), request);
   }
 
   /**
@@ -115,8 +217,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
   protected ResponseEntity<Object> handleIllegalAccessException(IllegalAccessException ex, WebRequest request) {
     log.error("handleIllegalAccessException : {0}", ex);
     HttpHeaders headers = new HttpHeaders();
-    return super.handleExceptionInternal(ex, createErrorResponse(ILLEGAL_ACCESS), headers, HttpStatus.INTERNAL_SERVER_ERROR,
-      request);
+    return super.handleExceptionInternal(ex, createErrorResponse(ILLEGAL_ACCESS), headers, HttpStatus.INTERNAL_SERVER_ERROR, request);
   }
 
   /**
@@ -135,8 +236,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     if (!CollectionUtils.isEmpty(supportedMethods)) {
       headers.setAllow(supportedMethods);
     }
-    return super.handleExceptionInternal(ex, createErrorResponse(HTTP_REQUEST_METHOD_NOT_SUPPORTED), headers, status,
-      request);
+    return super.handleExceptionInternal(ex, createErrorResponse(HTTP_REQUEST_METHOD_NOT_SUPPORTED), headers, status, request);
   }
 
   /**
@@ -162,8 +262,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
       }
     }
 
-    return super.handleExceptionInternal(ex, createErrorResponse(HTTP_REQUEST_METHOD_NOT_SUPPORTED), headers, status,
-      request);
+    return super.handleExceptionInternal(ex, createErrorResponse(HTTP_REQUEST_METHOD_NOT_SUPPORTED), headers, status, request);
   }
 
   /**
@@ -177,8 +276,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
   protected ResponseEntity<Object> handleHttpMediaTypeNotAcceptable(HttpMediaTypeNotAcceptableException ex,
                                                                     HttpHeaders headers, HttpStatus status, WebRequest request) {
     log.error("handleHttpMediaTypeNotAcceptable : {0}", ex);
-    return super.handleExceptionInternal(ex, createErrorResponse(HTTP_MEDIA_TYPE_NOT_ACCEPTABLE), headers, status,
-      request);
+    return super.handleExceptionInternal(ex, createErrorResponse(HTTP_MEDIA_TYPE_NOT_ACCEPTABLE), headers, status, request);
   }
 
   /**
@@ -206,8 +304,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
   protected ResponseEntity<Object> handleMissingServletRequestParameter(MissingServletRequestParameterException ex,
                                                                         HttpHeaders headers, HttpStatus status, WebRequest request) {
     log.error("handleMissingServletRequestParameter : {0}", ex);
-    return super.handleExceptionInternal(ex, createErrorResponse(MISSING_SERVLET_REQUEST_PARAMETER), headers, status,
-      request);
+    return super.handleExceptionInternal(ex, createErrorResponse(MISSING_SERVLET_REQUEST_PARAMETER), headers, status, request);
   }
 
   /**
@@ -315,8 +412,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
   protected ResponseEntity<Object> handleMissingServletRequestPart(MissingServletRequestPartException ex,
                                                                    HttpHeaders headers, HttpStatus status, WebRequest request) {
     log.error("handleMissingServletRequestPart : {0}", ex);
-    return super.handleExceptionInternal(ex, createErrorResponse(MISSING_SERVLET_REQUEST_PART), headers, status,
-      request);
+    return super.handleExceptionInternal(ex, createErrorResponse(MISSING_SERVLET_REQUEST_PART), headers, status, request);
   }
 
   /**
@@ -390,7 +486,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
    * @param errorCode 에러코드
    * @return ErrorResponse Object
    */
-  private ErrorResponse createErrorResponse(GlobalErrorCode errorCode) {
+  private ErrorResponse createErrorResponse(BaseErrorCode errorCode) {
     return new ErrorResponse(errorCode);
   }
 
@@ -401,7 +497,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
    * @param message   클라이언트 메시지
    * @return ErrorResponse Object
    */
-  private ErrorResponse createErrorResponse(GlobalErrorCode errorCode, String message) {
+  private ErrorResponse createErrorResponse(BaseErrorCode errorCode, String message) {
     return new ErrorResponse(errorCode, message);
   }
 

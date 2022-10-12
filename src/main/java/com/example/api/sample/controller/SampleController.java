@@ -1,4 +1,4 @@
-package com.example.api.domain.sample;
+package com.example.api.sample.controller;
 
 import com.example.api.dto.ExampleDto;
 import lombok.RequiredArgsConstructor;
@@ -7,14 +7,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.api.global.code.GlobalErrorCode;
-import com.example.api.global.exception.ApiException;
+import com.example.api.global.exception.InternalServerErrorException;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
 public class SampleController {
   @GetMapping("/exception")
   public void error() {
-    throw new ApiException(GlobalErrorCode.SAMPLE_ERROR);
+    throw new InternalServerErrorException(GlobalErrorCode.SAMPLE_ERROR);
   }
 
   @GetMapping("/tostring")
