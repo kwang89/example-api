@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.example.api.global.code.base.BaseErrorCode;
 import com.example.api.global.exception.*;
-import com.example.api.global.exception.base.BaseException;
 import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
@@ -38,7 +37,7 @@ import org.springframework.web.multipart.support.MissingServletRequestPartExcept
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import com.example.api.dto.ErrorResponse;
+import com.example.api.global.dto.ErrorResponse;
 import com.example.api.global.code.GlobalErrorCode;
 
 import lombok.extern.slf4j.Slf4j;

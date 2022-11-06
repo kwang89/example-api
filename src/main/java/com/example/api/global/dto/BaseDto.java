@@ -1,12 +1,39 @@
 package com.example.api.global.dto;
 
-import com.example.api.global.masking.MaskingToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import com.example.api.constant.CharacterConstant;
+import com.example.api.global.code.GlobalErrorCode;
+import com.example.api.global.exception.InternalServerErrorException;
+import com.example.api.global.masking.MaskingField;
+import com.google.common.base.MoreObjects;
+import com.google.common.reflect.Invokable;
 
-// TODO apache commons 제거 후 guava로 변경하여 toString 설정
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+
 public class BaseDto {
   @Override
+
   public String toString() {
-    return new MaskingToStringBuilder(this, ToStringStyle.JSON_STYLE).toString();
+    MoreObjects.ToStringHelper helper = MoreObjects.toStringHelper(this);
+
+    Field[] fields = this.getClass().getDeclaredFields();
+    for (Field field : fields) {
+      try {
+        String name = field.getName();
+        if (!Modifier.isPublic(field.getModifiers())) {
+          field.setAccessible(true);
+        }
+        Object value = field.isAnnotationPresent(MaskingField.class) ? fillMask(field.get(this)) : field.get(this);
+        helper.add(name, value);
+
+      } catch (IllegalArgumentException | IllegalAccessException e) {
+        throw new InternalServerErrorException(GlobalErrorCode.ILLEGAL_ACCESS, e);
+      }
+    }
+    return helper.toString();
+  }
+
+  private final String fillMask(Object obj) {
+    return CharacterConstant.ASTERISK.repeat(String.valueOf(obj).length());
   }
 }

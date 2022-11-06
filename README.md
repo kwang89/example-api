@@ -7,9 +7,9 @@
 - [JPA](#JPA)
 
 ## TODO
-1. DTO Serialize/Deserialize 확인
-2. DTO ToString, EqualandHash 등 공통 method 
-3. 로깅 시, masking처리(annotation, logback masking 등)
+1. ~~DTO Serialize/Deserialize 확인~~
+2. ~~DTO ToString~~
+3. ~~로깅 시, masking처리(annotation, logback masking 등)~~
 4. Sample CRUD
 5. 시작 시, 필요 데이터 로딩(H2)
 6. 화면 메시지 처리(DB로 관리 가능하도록, Redis 활용하여 캐싱)
@@ -21,7 +21,6 @@
 
 
 ## Jackson2ObjectMapperBuilderCustomizer
-
 - Serialization
   |구분|제외여부|
   |---|---|
@@ -33,9 +32,7 @@
 - 날짜 및 시간 Serialization & Deserialization : [JavaTimeModule](https://fasterxml.github.io/jackson-modules-java8/javadoc/datetime/2.9/com/fasterxml/jackson/datatype/jsr310/JavaTimeModule.html)
 
 ## LogBack
-
 > 아래 내용들은 logback-spring.xml에 직접 설정해도 되지만 application.yml에서 전부 관리하는게 편하지 않을까 하는 생각에 정리
-
 - ConsoleAppender  
   |application.yml|logback-spring.xml|설명|Default 값|
   |---|---|:---|:---|
@@ -78,9 +75,7 @@
   ```
 
 ### ErrorResponse Format
-
 > 에러의 응답형태는 항상 일정하도록 Class를 선언한다. `ErrorResponse.java` 참조
-
 - Json형식으로 Return되며 Format은 아래와 같다.
   ```json
   {
@@ -142,6 +137,21 @@
     log.info(dto.toString()); // {"testNm":"******","age":1,"longData":5}
     log.info("test : {}", dto); // test : {"testNm":"******","age":1,"longData":5}
     ```
+   
+## Util
+- com.example.api.util 
+  - FileUtil : 파일
+- com.google.common.base(Guava)
+  - [String 관련 Util](https://github.com/google/guava/wiki/StringsExplained)
+    - [Strings](https://guava.dev/releases/snapshot/api/docs/com/google/common/base/Strings.html)
+    - [Joiner](https://guava.dev/releases/snapshot/api/docs/com/google/common/base/Joiner.html)
+    - [Splitter](https://guava.dev/releases/snapshot/api/docs/com/google/common/base/Splitter.html)
+    - [CharMatcher](https://guava.dev/releases/snapshot/api/docs/com/google/common/base/CharMatcher.html)
+    - [Charsets](https://guava.dev/releases/snapshot/api/docs/com/google/common/base/Charsets.html)
+    - [CaseFormat](https://guava.dev/releases/snapshot/api/docs/com/google/common/base/CaseFormat.html)
+  - 그 외 Util은 [Guava 참조](https://github.com/google/guava/wiki)
+
+
 ## JPA
 - 학습 필요
   - hibornate vs spring data jpa 차이점

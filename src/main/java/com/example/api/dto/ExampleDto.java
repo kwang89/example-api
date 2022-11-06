@@ -12,6 +12,8 @@ import lombok.Setter;
 public class ExampleDto extends BaseDto {
   @MaskingField
   private String testNm;
+  @MaskingField
   private int age;
+  @MaskingField
   private long longData;
 }
