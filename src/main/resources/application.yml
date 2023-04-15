@@ -25,8 +25,8 @@ spring:
 
 logging:
   level:
-#    org.hibernate.SQL: debug #콘솔에 남기는게 아니라 로그로 남음.
-    org.hibernate.type : trace #바인딩된 파라미터까지 볼 수 있음
+    #    org.hibernate.SQL: debug #콘솔에 남기는게 아니라 로그로 남음.
+    org.hibernate.type: trace #바인딩된 파라미터까지 볼 수 있음
 
 server:
   error:

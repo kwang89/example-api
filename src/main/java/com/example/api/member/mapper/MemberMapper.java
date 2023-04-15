@@ -1,10 +1,11 @@
 package com.example.api.member.mapper;
 
+import org.mapstruct.Mapper;
+
 import com.example.api.member.domain.Member;
 import com.example.api.member.dto.MemberRequest;
-import org.mapstruct.Mapper;
 
 @Mapper
 public interface MemberMapper {
-  Member memberRequestToMember(MemberRequest memberRequest);
+	Member memberRequestToMember(MemberRequest memberRequest);
 }

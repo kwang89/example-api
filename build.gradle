@@ -1,59 +1,84 @@
 plugins {
-	id 'org.springframework.boot' version '2.7.2'
-	id 'io.spring.dependency-management' version '1.0.12.RELEASE'
-	id 'org.asciidoctor.convert' version '1.5.8'
-	id 'java'
+    id 'org.springframework.boot' version '3.0.5'
+    id 'io.spring.dependency-management' version '1.1.0'
+    id 'org.asciidoctor.convert' version '2.4.0'
+    id 'org.ec4j.editorconfig' version '0.0.3'
+    id 'java'
 }
 
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+sourceCompatibility = '17'
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 ext {
-	set('snippetsDir', file("build/generated-snippets"))
+    set('snippetsDir', file("build/generated-snippets"))
+    set('mapstructVersion', '1.5.4.Final')
+    set('guavaVersion', '31.1-jre')
+    set('commonTextVersion', '1.10.0')
 }
 
 dependencies {
-	// implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-  implementation 'org.mapstruct:mapstruct:1.5.2.Final'
-  implementation 'com.google.guava:guava:31.1-jre'
-  compileOnly 'org.projectlombok:lombok'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	runtimeOnly 'com.h2database:h2'
-	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-	annotationProcessor 'org.projectlombok:lombok'
-  annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.2.Final'
-  testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-  testAnnotationProcessor "org.mapstruct:mapstruct-processor:1.5.2.Final"
-	// testImplementation 'org.springframework.security:spring-security-test'
+
+    // Spring
+    // implementation 'org.springframework.boot:spring-boot-starter-security'
+    // testImplementation 'org.springframework.security:spring-security-test'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+
+    // MapStruct
+    implementation "org.mapstruct:mapstruct:$mapstructVersion"
+    annotationProcessor "org.mapstruct:mapstruct-processor:$mapstructVersion"
+    testAnnotationProcessor "org.mapstruct:mapstruct-processor:$mapstructVersion"
+
+    // guava
+    implementation "com.google.guava:guava:$guavaVersion"// guava
+    // apache common text
+    implementation "org.apache.commons:commons-text:$commonTextVersion"
+    // lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    // H2
+    runtimeOnly 'com.h2database:h2'
 }
 
 compileJava {
-  options.compilerArgs += [
-    '-Amapstruct.defaultComponentModel=spring'
-  ]
+    options.encoding = 'UTF-8'
+    options.compilerArgs += [
+            '-Amapstruct.defaultComponentModel=spring'
+    ]
+}
+
+compileTestJava {
+    options.encoding = 'UTF-8'
 }
 
 tasks.named('test') {
-	outputs.dir snippetsDir
-	useJUnitPlatform()
+    outputs.dir snippetsDir
+    useJUnitPlatform()
 }
 
 tasks.named('asciidoctor') {
-	inputs.dir snippetsDir
-	dependsOn test
+    inputs.dir snippetsDir
+    dependsOn test
 }
+
+editorconfig {
+    excludes = ['build']
+}
+
+check.dependsOn editorconfigCheck

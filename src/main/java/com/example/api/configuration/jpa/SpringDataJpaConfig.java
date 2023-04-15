@@ -1,4 +1,4 @@
-package com.example.api.configuration;
+package com.example.api.configuration.jpa;
 
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 

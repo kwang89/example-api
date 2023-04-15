@@ -1,8 +1,8 @@
 package com.example.api.global.exception;
 
-import com.example.api.global.code.base.BaseErrorCode;
 import org.springframework.http.HttpStatus;
 
+import com.example.api.global.code.base.BaseErrorCode;
 import com.example.api.global.exception.base.BaseException;
 
 import lombok.Getter;
@@ -17,23 +17,23 @@ import lombok.Getter;
 @Getter
 public class InternalServerErrorException extends BaseException {
 
-  private Object data;
+	private Object data;
 
-  public InternalServerErrorException(BaseErrorCode errorCode) {
-    super(HttpStatus.INTERNAL_SERVER_ERROR, errorCode);
-  }
+	public InternalServerErrorException(BaseErrorCode errorCode) {
+		super(HttpStatus.INTERNAL_SERVER_ERROR, errorCode);
+	}
 
-  public InternalServerErrorException(BaseErrorCode errorCode, Object data) {
-    super(HttpStatus.INTERNAL_SERVER_ERROR, errorCode);
-    this.data = data;
-  }
+	public InternalServerErrorException(BaseErrorCode errorCode, Object data) {
+		super(HttpStatus.INTERNAL_SERVER_ERROR, errorCode);
+		this.data = data;
+	}
 
-  public InternalServerErrorException(BaseErrorCode errorCode, Exception e) {
-    super(HttpStatus.INTERNAL_SERVER_ERROR, errorCode, e);
-  }
+	public InternalServerErrorException(BaseErrorCode errorCode, Exception e) {
+		super(HttpStatus.INTERNAL_SERVER_ERROR, errorCode, e);
+	}
 
-  public InternalServerErrorException(BaseErrorCode errorCode, Exception e, Object data) {
-    super(HttpStatus.INTERNAL_SERVER_ERROR, errorCode, e);
-    this.data = data;
-  }
+	public InternalServerErrorException(BaseErrorCode errorCode, Exception e, Object data) {
+		super(HttpStatus.INTERNAL_SERVER_ERROR, errorCode, e);
+		this.data = data;
+	}
 }
