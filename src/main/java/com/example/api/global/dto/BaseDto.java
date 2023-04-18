@@ -3,6 +3,8 @@ package com.example.api.global.dto;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
+import org.springframework.util.ReflectionUtils;
+
 import com.example.api.constant.CharacterConstant;
 import com.example.api.global.code.GlobalErrorCode;
 import com.example.api.global.exception.InternalServerErrorException;
@@ -11,7 +13,6 @@ import com.google.common.base.MoreObjects;
 
 public class BaseDto {
 	@Override
-
 	public String toString() {
 		MoreObjects.ToStringHelper helper = MoreObjects.toStringHelper(this);
 
@@ -20,7 +21,7 @@ public class BaseDto {
 			try {
 				String name = field.getName();
 				if (!Modifier.isPublic(field.getModifiers())) {
-					field.setAccessible(true);
+					ReflectionUtils.makeAccessible(field);
 				}
 				Object value =
 					field.isAnnotationPresent(MaskingField.class) ? fillMask(field.get(this)) : field.get(this);
@@ -33,7 +34,7 @@ public class BaseDto {
 		return helper.toString();
 	}
 
-	private final String fillMask(Object obj) {
+	private String fillMask(Object obj) {
 		return CharacterConstant.ASTERISK.repeat(String.valueOf(obj).length());
 	}
 }

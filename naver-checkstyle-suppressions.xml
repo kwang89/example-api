@@ -5,7 +5,6 @@
 
 <!--checkstyle 예외 파일에 대한 예제-->
 <suppressions>
-    <!--    <suppress files="UserController.java" checks=".*"/>-->
-    <!--    <suppress files="UserService.java" checks=".*"/>-->
+<!--    <suppress files="src/test/resources/*" checks=".*"/>-->
 </suppressions>
 
