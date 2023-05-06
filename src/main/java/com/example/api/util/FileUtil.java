@@ -13,8 +13,6 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.ObjectUtils;
 
-// TODO FileCopyUtils
-// TODO read, write String with UTF-8 StreamUtils
 public class FileUtil extends FileCopyUtils {
 	public static boolean delete(@Nullable File root) {
 		if (ObjectUtils.isEmpty(root)) {
