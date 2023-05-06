@@ -1,6 +1,11 @@
 package com.example.api.constant;
 
 public final class CharacterConstant {
+
+	private CharacterConstant() {
+		// Do nothing constructor
+	}
+
 	/** 별표 */
 	public static final String ASTERISK = "*";
 	/** 마침표 */
