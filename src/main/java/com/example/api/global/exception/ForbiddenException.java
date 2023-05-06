@@ -28,12 +28,12 @@ public class ForbiddenException extends BaseException {
 		this.data = data;
 	}
 
-	public ForbiddenException(BaseErrorCode errorCode, Exception e) {
-		super(HttpStatus.FORBIDDEN, errorCode, e);
+	public ForbiddenException(BaseErrorCode errorCode, Exception exception) {
+		super(HttpStatus.FORBIDDEN, errorCode, exception);
 	}
 
-	public ForbiddenException(BaseErrorCode errorCode, Exception e, Object data) {
-		super(HttpStatus.FORBIDDEN, errorCode, e);
+	public ForbiddenException(BaseErrorCode errorCode, Exception exception, Object data) {
+		super(HttpStatus.FORBIDDEN, errorCode, exception);
 		this.data = data;
 	}
 }

@@ -28,12 +28,12 @@ public class UnAuthorizedException extends BaseException {
 		this.data = data;
 	}
 
-	public UnAuthorizedException(BaseErrorCode errorCode, Exception e) {
-		super(HttpStatus.UNAUTHORIZED, errorCode, e);
+	public UnAuthorizedException(BaseErrorCode errorCode, Exception exception) {
+		super(HttpStatus.UNAUTHORIZED, errorCode, exception);
 	}
 
-	public UnAuthorizedException(BaseErrorCode errorCode, Exception e, Object data) {
-		super(HttpStatus.UNAUTHORIZED, errorCode, e);
+	public UnAuthorizedException(BaseErrorCode errorCode, Exception exception, Object data) {
+		super(HttpStatus.UNAUTHORIZED, errorCode, exception);
 		this.data = data;
 	}
 }

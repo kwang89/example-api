@@ -5,6 +5,7 @@ plugins {
     id "com.epages.restdocs-api-spec" version "0.18.0"
     id "org.ec4j.editorconfig" version "0.0.3"
     id "java"
+    id "checkstyle"
 }
 
 group = "com.example"
@@ -114,6 +115,13 @@ postman {
 
 editorconfig {
     excludes = ["build"]
+}
+
+checkstyle {
+    maxWarnings = 0
+    configFile = file("${rootDir}/naver-checkstyle-rules.xml")
+    configProperties = ["suppressionFile": "${rootDir}/naver-checkstyle-suppressions.xml"]
+    toolVersion = "8.24"
 }
 
 check.dependsOn editorconfigCheck

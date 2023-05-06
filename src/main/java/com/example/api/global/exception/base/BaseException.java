@@ -23,16 +23,16 @@ public class BaseException extends RuntimeException {
 		this(HttpStatus.INTERNAL_SERVER_ERROR, errorCode);
 	}
 
-	public BaseException(BaseErrorCode errorCode, Exception e) {
-		this(HttpStatus.INTERNAL_SERVER_ERROR, errorCode, e);
+	public BaseException(BaseErrorCode errorCode, Exception exception) {
+		this(HttpStatus.INTERNAL_SERVER_ERROR, errorCode, exception);
 	}
 
 	public BaseException(int statusCode, BaseErrorCode errorCode) {
 		this(HttpStatus.valueOf(statusCode), errorCode);
 	}
 
-	public BaseException(int statusCode, BaseErrorCode errorCode, Exception e) {
-		super(e);
+	public BaseException(int statusCode, BaseErrorCode errorCode, Exception exception) {
+		super(exception);
 		this.httpStatus = HttpStatus.valueOf(statusCode);
 		this.errorCode = errorCode;
 	}
@@ -43,8 +43,8 @@ public class BaseException extends RuntimeException {
 		this.errorCode = errorCode;
 	}
 
-	public BaseException(HttpStatus httpStatus, BaseErrorCode errorCode, Exception e) {
-		super(e);
+	public BaseException(HttpStatus httpStatus, BaseErrorCode errorCode, Exception exception) {
+		super(exception);
 		this.httpStatus = httpStatus;
 		this.errorCode = errorCode;
 	}

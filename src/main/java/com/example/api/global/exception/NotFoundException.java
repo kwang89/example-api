@@ -28,12 +28,12 @@ public class NotFoundException extends BaseException {
 		this.data = data;
 	}
 
-	public NotFoundException(BaseErrorCode errorCode, Exception e) {
-		super(HttpStatus.NOT_FOUND, errorCode, e);
+	public NotFoundException(BaseErrorCode errorCode, Exception exception) {
+		super(HttpStatus.NOT_FOUND, errorCode, exception);
 	}
 
-	public NotFoundException(BaseErrorCode errorCode, Exception e, Object data) {
-		super(HttpStatus.NOT_FOUND, errorCode, e);
+	public NotFoundException(BaseErrorCode errorCode, Exception exception, Object data) {
+		super(HttpStatus.NOT_FOUND, errorCode, exception);
 		this.data = data;
 	}
 }

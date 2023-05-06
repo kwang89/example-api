@@ -28,12 +28,12 @@ public class InternalServerErrorException extends BaseException {
 		this.data = data;
 	}
 
-	public InternalServerErrorException(BaseErrorCode errorCode, Exception e) {
-		super(HttpStatus.INTERNAL_SERVER_ERROR, errorCode, e);
+	public InternalServerErrorException(BaseErrorCode errorCode, Exception exception) {
+		super(HttpStatus.INTERNAL_SERVER_ERROR, errorCode, exception);
 	}
 
-	public InternalServerErrorException(BaseErrorCode errorCode, Exception e, Object data) {
-		super(HttpStatus.INTERNAL_SERVER_ERROR, errorCode, e);
+	public InternalServerErrorException(BaseErrorCode errorCode, Exception exception, Object data) {
+		super(HttpStatus.INTERNAL_SERVER_ERROR, errorCode, exception);
 		this.data = data;
 	}
 }

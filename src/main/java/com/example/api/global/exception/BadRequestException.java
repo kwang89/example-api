@@ -28,12 +28,12 @@ public class BadRequestException extends BaseException {
 		this.data = data;
 	}
 
-	public BadRequestException(BaseErrorCode errorCode, Exception e) {
-		super(HttpStatus.BAD_REQUEST, errorCode, e);
+	public BadRequestException(BaseErrorCode errorCode, Exception exception) {
+		super(HttpStatus.BAD_REQUEST, errorCode, exception);
 	}
 
-	public BadRequestException(BaseErrorCode errorCode, Exception e, Object data) {
-		super(HttpStatus.BAD_REQUEST, errorCode, e);
+	public BadRequestException(BaseErrorCode errorCode, Exception exception, Object data) {
+		super(HttpStatus.BAD_REQUEST, errorCode, exception);
 		this.data = data;
 	}
 }

@@ -6,6 +6,7 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +26,14 @@ class SampleControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
 
+	@DisplayName("restdoc_생성_테스트")
 	@Test
-	void restdoc_생성_테스트() throws Exception {
+	void testSampleException() throws Exception {
 		mockMvc.perform(get("/exception").accept(MediaType.APPLICATION_JSON)) // (1)
 			.andExpect(status().is5xxServerError()) // (2)
 			.andDo(
-				document("sample/exception"
-					, responseFields(
+				document("sample/exception",
+					responseFields(
 						fieldWithPath("errorCode").description("에러코드"),
 						fieldWithPath("errorMessage").description("에러메세지"),
 						fieldWithPath("message").description("메세지"),

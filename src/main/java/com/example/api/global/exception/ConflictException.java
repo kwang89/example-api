@@ -28,12 +28,12 @@ public class ConflictException extends BaseException {
 		this.data = data;
 	}
 
-	public ConflictException(BaseErrorCode errorCode, Exception e) {
-		super(HttpStatus.CONFLICT, errorCode, e);
+	public ConflictException(BaseErrorCode errorCode, Exception exception) {
+		super(HttpStatus.CONFLICT, errorCode, exception);
 	}
 
-	public ConflictException(BaseErrorCode errorCode, Exception e, Object data) {
-		super(HttpStatus.CONFLICT, errorCode, e);
+	public ConflictException(BaseErrorCode errorCode, Exception exception, Object data) {
+		super(HttpStatus.CONFLICT, errorCode, exception);
 		this.data = data;
 	}
 }
