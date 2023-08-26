@@ -1,7 +1,8 @@
 package com.example.api.sample.controller;
 
+import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.*;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
+
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -18,7 +19,7 @@ import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 
-@ExtendWith(RestDocumentationExtension.class)
+//@ExtendWith(RestDocumentationExtension.class)
 @AutoConfigureRestDocs
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = RANDOM_PORT)
