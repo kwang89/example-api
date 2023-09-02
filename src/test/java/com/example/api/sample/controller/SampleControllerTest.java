@@ -1,8 +1,6 @@
 package com.example.api.sample.controller;
 
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
-import static com.example.api.document.DocumentUtils.getDocumentRequest;
-import static com.example.api.document.DocumentUtils.getDocumentResponse;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
