@@ -49,17 +49,17 @@ dependencies {
     // restdocs
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
     asciidoctorExt("org.springframework.restdocs:spring-restdocs-asciidoctor")
-    testImplementation ("com.epages:restdocs-api-spec-mockmvc:$epagesVersion")
+    testImplementation("com.epages:restdocs-api-spec-mockmvc:$epagesVersion")
 
     // MapStruct
-    implementation ("org.mapstruct:mapstruct:$mapstructVersion")
-    annotationProcessor ("org.mapstruct:mapstruct-processor:$mapstructVersion")
-    testAnnotationProcessor ("org.mapstruct:mapstruct-processor:$mapstructVersion")
+    implementation("org.mapstruct:mapstruct:$mapstructVersion")
+    annotationProcessor("org.mapstruct:mapstruct-processor:$mapstructVersion")
+    testAnnotationProcessor("org.mapstruct:mapstruct-processor:$mapstructVersion")
 
     // guava
-    implementation ("com.google.guava:guava:$guavaVersion")
+    implementation("com.google.guava:guava:$guavaVersion")
     // apache common text
-    implementation ("org.apache.commons:commons-text:$commonTextVersion")
+    implementation("org.apache.commons:commons-text:$commonTextVersion")
     // lombok
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
@@ -77,11 +77,8 @@ tasks {
         options.encoding = "UTF-8"
     }
 
-    withType<Test> {
-        useJUnitPlatform()
-    }
-
     test {
+        useJUnitPlatform()
         outputs.dir(snippetsDir)
     }
 
@@ -90,8 +87,10 @@ tasks {
         dependsOn("asciidoctor")
     }
 
+    // https://asciidoctor.github.io/asciidoctor-gradle-plugin/master/user-guide/
     asciidoctor {
         inputs.dir(snippetsDir)
+        baseDirFollowsSourceFile()
         configurations(asciidoctorExt.name)
         dependsOn(test)
 
@@ -133,7 +132,7 @@ tasks {
         dependsOn(editorconfigCheck)
     }
 }
-    //checkstyle {
+//checkstyle {
 //    maxWarnings = 0
 //    configFile = file("${rootDir}/naver-checkstyle-rules.xml")
 //    configProperties = ["suppressionFile": "${rootDir}/naver-checkstyle-suppressions.xml"]

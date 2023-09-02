@@ -1,11 +1,9 @@
 package com.example.api.global.exception;
 
-import org.springframework.http.HttpStatus;
-
 import com.example.api.global.code.base.BaseErrorCode;
 import com.example.api.global.exception.base.BaseException;
-
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
 /**
  * ForbiddenException
@@ -17,23 +15,23 @@ import lombok.Getter;
 @Getter
 public class ForbiddenException extends BaseException {
 
-	private Object data;
+    private Object data;
 
-	public ForbiddenException(BaseErrorCode errorCode) {
-		super(HttpStatus.FORBIDDEN, errorCode);
-	}
+    public ForbiddenException(BaseErrorCode errorCode) {
+        super(HttpStatus.FORBIDDEN, errorCode);
+    }
 
-	public ForbiddenException(BaseErrorCode errorCode, Object data) {
-		super(HttpStatus.FORBIDDEN, errorCode);
-		this.data = data;
-	}
+    public ForbiddenException(BaseErrorCode errorCode, Object data) {
+        super(HttpStatus.FORBIDDEN, errorCode);
+        this.data = data;
+    }
 
-	public ForbiddenException(BaseErrorCode errorCode, Exception exception) {
-		super(HttpStatus.FORBIDDEN, errorCode, exception);
-	}
+    public ForbiddenException(BaseErrorCode errorCode, Exception exception) {
+        super(HttpStatus.FORBIDDEN, errorCode, exception);
+    }
 
-	public ForbiddenException(BaseErrorCode errorCode, Exception exception, Object data) {
-		super(HttpStatus.FORBIDDEN, errorCode, exception);
-		this.data = data;
-	}
+    public ForbiddenException(BaseErrorCode errorCode, Exception exception, Object data) {
+        super(HttpStatus.FORBIDDEN, errorCode, exception);
+        this.data = data;
+    }
 }

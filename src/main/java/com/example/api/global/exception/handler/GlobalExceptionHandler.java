@@ -1,10 +1,34 @@
 package com.example.api.global.exception.handler;
 
-import static com.example.api.global.code.GlobalErrorCode.*;
+import static com.example.api.global.code.GlobalErrorCode.BIND_ERROR;
+import static com.example.api.global.code.GlobalErrorCode.CONVERSION_NOT_SUPPORTED;
+import static com.example.api.global.code.GlobalErrorCode.HTTP_MEDIA_TYPE_NOT_ACCEPTABLE;
+import static com.example.api.global.code.GlobalErrorCode.HTTP_MESSAGE_NOT_READABLE;
+import static com.example.api.global.code.GlobalErrorCode.HTTP_MESSAGE_NOT_WRITABLE;
+import static com.example.api.global.code.GlobalErrorCode.HTTP_REQUEST_METHOD_NOT_SUPPORTED;
+import static com.example.api.global.code.GlobalErrorCode.ILLEGAL_ACCESS;
+import static com.example.api.global.code.GlobalErrorCode.METHOD_ARGUMENT_NOT_VALID;
+import static com.example.api.global.code.GlobalErrorCode.MISSING_PATH_VARIABLE;
+import static com.example.api.global.code.GlobalErrorCode.MISSING_SERVLET_REQUEST_PARAMETER;
+import static com.example.api.global.code.GlobalErrorCode.MISSING_SERVLET_REQUEST_PART;
+import static com.example.api.global.code.GlobalErrorCode.NO_HANDLER_FOUND;
+import static com.example.api.global.code.GlobalErrorCode.SERVLET_REQUEST_BINDING;
+import static com.example.api.global.code.GlobalErrorCode.TYPE_MISMATCH;
+import static com.example.api.global.code.GlobalErrorCode.UNKNOWN_ERROR;
 
+import com.example.api.global.code.GlobalErrorCode;
+import com.example.api.global.code.base.BaseErrorCode;
+import com.example.api.global.dto.ErrorResponse;
+import com.example.api.global.exception.BadRequestException;
+import com.example.api.global.exception.ConflictException;
+import com.example.api.global.exception.ForbiddenException;
+import com.example.api.global.exception.InternalServerErrorException;
+import com.example.api.global.exception.NotFoundException;
+import com.example.api.global.exception.UnAuthorizedException;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Set;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
@@ -34,19 +58,6 @@ import org.springframework.web.multipart.support.MissingServletRequestPartExcept
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import com.example.api.global.code.GlobalErrorCode;
-import com.example.api.global.code.base.BaseErrorCode;
-import com.example.api.global.dto.ErrorResponse;
-import com.example.api.global.exception.BadRequestException;
-import com.example.api.global.exception.ConflictException;
-import com.example.api.global.exception.ForbiddenException;
-import com.example.api.global.exception.InternalServerErrorException;
-import com.example.api.global.exception.NotFoundException;
-import com.example.api.global.exception.UnAuthorizedException;
-
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.extern.slf4j.Slf4j;
-
 /**
  * Global Exception Handler.
  *
@@ -61,443 +72,477 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
-	/**
-	 * 예상되지 않은 모든 에러 Handle
-	 *
-	 * @param ex      the target exception
-	 * @param request the current request
-	 * @return Error Response Object<br>
-	 * HttpStatusCode : 500 - Internal Server Error
-	 * @see java.lang.Exception
-	 */
-	@ExceptionHandler(Exception.class)
-	private ResponseEntity<Object> handleUnknownException(Exception ex, WebRequest request) {
-		log.error("handleException : {0}", ex);
-		HttpHeaders headers = new HttpHeaders();
-		return super.handleExceptionInternal(ex, createErrorResponse(UNKNOWN_ERROR), headers,
-			HttpStatus.INTERNAL_SERVER_ERROR, request);
-	}
 
-	/**
-	 * BadRequestException
-	 *
-	 * @param ex      the target exception
-	 * @param request the current request
-	 * @return Error Response Object
-	 * @see BadRequestException
-	 */
-	@ExceptionHandler(BadRequestException.class)
-	protected ResponseEntity<Object> handleBadRequestException(BadRequestException ex, WebRequest request) {
-		log.error("handleBadRequestException : {0}", ex);
-		HttpHeaders headers = new HttpHeaders();
+    /**
+     * 예상되지 않은 모든 에러 Handle
+     *
+     * @param ex      the target exception
+     * @param request the current request
+     * @return Error Response Object<br> HttpStatusCode : 500 - Internal Server Error
+     * @see java.lang.Exception
+     */
+    @ExceptionHandler(Exception.class)
+    private ResponseEntity<Object> handleUnknownException(Exception ex, WebRequest request) {
+        log.error("handleException : {0}", ex);
+        HttpHeaders headers = new HttpHeaders();
+        return super.handleExceptionInternal(ex, createErrorResponse(UNKNOWN_ERROR), headers,
+            HttpStatus.INTERNAL_SERVER_ERROR, request);
+    }
 
-		ErrorResponse errorResponse = createErrorResponse(ex.getErrorCode());
+    /**
+     * BadRequestException
+     *
+     * @param ex      the target exception
+     * @param request the current request
+     * @return Error Response Object
+     * @see BadRequestException
+     */
+    @ExceptionHandler(BadRequestException.class)
+    protected ResponseEntity<Object> handleBadRequestException(BadRequestException ex,
+        WebRequest request) {
+        log.error("handleBadRequestException : {0}", ex);
+        HttpHeaders headers = new HttpHeaders();
 
-		if (!ObjectUtils.isEmpty(ex.getData())) {
-			errorResponse.setData(ex.getData());
-		}
+        ErrorResponse errorResponse = createErrorResponse(ex.getErrorCode());
 
-		return super.handleExceptionInternal(ex, errorResponse, headers, ex.getHttpStatus(), request);
-	}
+        if (!ObjectUtils.isEmpty(ex.getData())) {
+            errorResponse.setData(ex.getData());
+        }
 
-	/**
-	 * UnAuthorizedException
-	 *
-	 * @param ex      the target exception
-	 * @param request the current request
-	 * @return Error Response Object
-	 * @see UnAuthorizedException
-	 */
-	@ExceptionHandler(UnAuthorizedException.class)
-	protected ResponseEntity<Object> handleUnAuthorizedException(UnAuthorizedException ex, WebRequest request) {
-		log.error("handleUnAuthorizedException : {0}", ex);
-		HttpHeaders headers = new HttpHeaders();
+        return super.handleExceptionInternal(ex, errorResponse, headers, ex.getHttpStatus(),
+            request);
+    }
 
-		ErrorResponse errorResponse = createErrorResponse(ex.getErrorCode());
+    /**
+     * UnAuthorizedException
+     *
+     * @param ex      the target exception
+     * @param request the current request
+     * @return Error Response Object
+     * @see UnAuthorizedException
+     */
+    @ExceptionHandler(UnAuthorizedException.class)
+    protected ResponseEntity<Object> handleUnAuthorizedException(UnAuthorizedException ex,
+        WebRequest request) {
+        log.error("handleUnAuthorizedException : {0}", ex);
+        HttpHeaders headers = new HttpHeaders();
 
-		if (!ObjectUtils.isEmpty(ex.getData())) {
-			errorResponse.setData(ex.getData());
-		}
+        ErrorResponse errorResponse = createErrorResponse(ex.getErrorCode());
 
-		return super.handleExceptionInternal(ex, errorResponse, headers, ex.getHttpStatus(), request);
-	}
+        if (!ObjectUtils.isEmpty(ex.getData())) {
+            errorResponse.setData(ex.getData());
+        }
 
-	/**
-	 * ForbiddenException
-	 *
-	 * @param ex      the target exception
-	 * @param request the current request
-	 * @return Error Response Object
-	 * @see ForbiddenException
-	 */
-	@ExceptionHandler(ForbiddenException.class)
-	protected ResponseEntity<Object> handleForbiddenException(ForbiddenException ex, WebRequest request) {
-		log.error("handleForbiddenException : {0}", ex);
-		HttpHeaders headers = new HttpHeaders();
+        return super.handleExceptionInternal(ex, errorResponse, headers, ex.getHttpStatus(),
+            request);
+    }
 
-		ErrorResponse errorResponse = createErrorResponse(ex.getErrorCode());
+    /**
+     * ForbiddenException
+     *
+     * @param ex      the target exception
+     * @param request the current request
+     * @return Error Response Object
+     * @see ForbiddenException
+     */
+    @ExceptionHandler(ForbiddenException.class)
+    protected ResponseEntity<Object> handleForbiddenException(ForbiddenException ex,
+        WebRequest request) {
+        log.error("handleForbiddenException : {0}", ex);
+        HttpHeaders headers = new HttpHeaders();
 
-		if (!ObjectUtils.isEmpty(ex.getData())) {
-			errorResponse.setData(ex.getData());
-		}
+        ErrorResponse errorResponse = createErrorResponse(ex.getErrorCode());
 
-		return super.handleExceptionInternal(ex, errorResponse, headers, ex.getHttpStatus(), request);
-	}
+        if (!ObjectUtils.isEmpty(ex.getData())) {
+            errorResponse.setData(ex.getData());
+        }
 
-	/**
-	 * NotFoundException
-	 *
-	 * @param ex      the target exception
-	 * @param request the current request
-	 * @return Error Response Object
-	 * @see NotFoundException
-	 */
-	@ExceptionHandler(NotFoundException.class)
-	protected ResponseEntity<Object> handleNotFoundException(NotFoundException ex, WebRequest request) {
-		log.error("handleNotFoundException : {0}", ex);
-		HttpHeaders headers = new HttpHeaders();
+        return super.handleExceptionInternal(ex, errorResponse, headers, ex.getHttpStatus(),
+            request);
+    }
 
-		ErrorResponse errorResponse = createErrorResponse(ex.getErrorCode());
+    /**
+     * NotFoundException
+     *
+     * @param ex      the target exception
+     * @param request the current request
+     * @return Error Response Object
+     * @see NotFoundException
+     */
+    @ExceptionHandler(NotFoundException.class)
+    protected ResponseEntity<Object> handleNotFoundException(NotFoundException ex,
+        WebRequest request) {
+        log.error("handleNotFoundException : {0}", ex);
+        HttpHeaders headers = new HttpHeaders();
 
-		if (!ObjectUtils.isEmpty(ex.getData())) {
-			errorResponse.setData(ex.getData());
-		}
+        ErrorResponse errorResponse = createErrorResponse(ex.getErrorCode());
 
-		return super.handleExceptionInternal(ex, errorResponse, headers, ex.getHttpStatus(), request);
-	}
+        if (!ObjectUtils.isEmpty(ex.getData())) {
+            errorResponse.setData(ex.getData());
+        }
 
-	/**
-	 * ConflictException
-	 *
-	 * @param ex      the target exception
-	 * @param request the current request
-	 * @return Error Response Object
-	 * @see ConflictException
-	 */
-	@ExceptionHandler(ConflictException.class)
-	protected ResponseEntity<Object> handleConflictException(ConflictException ex, WebRequest request) {
-		log.error("handleConflictException : {0}", ex);
-		HttpHeaders headers = new HttpHeaders();
+        return super.handleExceptionInternal(ex, errorResponse, headers, ex.getHttpStatus(),
+            request);
+    }
 
-		ErrorResponse errorResponse = createErrorResponse(ex.getErrorCode());
+    /**
+     * ConflictException
+     *
+     * @param ex      the target exception
+     * @param request the current request
+     * @return Error Response Object
+     * @see ConflictException
+     */
+    @ExceptionHandler(ConflictException.class)
+    protected ResponseEntity<Object> handleConflictException(ConflictException ex,
+        WebRequest request) {
+        log.error("handleConflictException : {0}", ex);
+        HttpHeaders headers = new HttpHeaders();
 
-		if (!ObjectUtils.isEmpty(ex.getData())) {
-			errorResponse.setData(ex.getData());
-		}
+        ErrorResponse errorResponse = createErrorResponse(ex.getErrorCode());
 
-		return super.handleExceptionInternal(ex, errorResponse, headers, ex.getHttpStatus(), request);
-	}
+        if (!ObjectUtils.isEmpty(ex.getData())) {
+            errorResponse.setData(ex.getData());
+        }
 
-	/**
-	 * InternalServerErrorException
-	 *
-	 * @param ex      the target exception
-	 * @param request the current request
-	 * @return Error Response Object
-	 * @see InternalServerErrorException
-	 */
-	@ExceptionHandler(InternalServerErrorException.class)
-	protected ResponseEntity<Object> handleInternalServerErrorException(InternalServerErrorException ex,
-		WebRequest request) {
-		log.error("handleInternalServerErrorException : {0}", ex);
-		HttpHeaders headers = new HttpHeaders();
+        return super.handleExceptionInternal(ex, errorResponse, headers, ex.getHttpStatus(),
+            request);
+    }
 
-		ErrorResponse errorResponse = createErrorResponse(ex.getErrorCode());
+    /**
+     * InternalServerErrorException
+     *
+     * @param ex      the target exception
+     * @param request the current request
+     * @return Error Response Object
+     * @see InternalServerErrorException
+     */
+    @ExceptionHandler(InternalServerErrorException.class)
+    protected ResponseEntity<Object> handleInternalServerErrorException(
+        InternalServerErrorException ex,
+        WebRequest request) {
+        log.error("handleInternalServerErrorException : {0}", ex);
+        HttpHeaders headers = new HttpHeaders();
 
-		if (!ObjectUtils.isEmpty(ex.getData())) {
-			errorResponse.setData(ex.getData());
-		}
+        ErrorResponse errorResponse = createErrorResponse(ex.getErrorCode());
 
-		return super.handleExceptionInternal(ex, errorResponse, headers, ex.getHttpStatus(), request);
-	}
+        if (!ObjectUtils.isEmpty(ex.getData())) {
+            errorResponse.setData(ex.getData());
+        }
 
-	/**
-	 * IllegalAccessException
-	 *
-	 * @return Error Response Object<br>
-	 * HttpStatusCode : 406 - Not Acceptable
-	 * @see java.lang.IllegalAccessException
-	 */
-	protected ResponseEntity<Object> handleIllegalAccessException(IllegalAccessException ex, WebRequest request) {
-		log.error("handleIllegalAccessException : {0}", ex);
-		HttpHeaders headers = new HttpHeaders();
-		return super.handleExceptionInternal(ex, createErrorResponse(ILLEGAL_ACCESS), headers,
-			HttpStatus.INTERNAL_SERVER_ERROR, request);
-	}
+        return super.handleExceptionInternal(ex, errorResponse, headers, ex.getHttpStatus(),
+            request);
+    }
 
-	/**
-	 * HttpRequestMethodNotSupportedException
-	 *
-	 * @return Error Response Object<br>
-	 * HttpStatusCode : 405 - Method Not Allowed
-	 * @see org.springframework.web.HttpRequestMethodNotSupportedException
-	 */
-	protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex,
-		HttpHeaders headers, HttpStatus status, WebRequest request) {
-		log.error("handleHttpRequestMethodNotSupported : {0}", ex);
+    /**
+     * IllegalAccessException
+     *
+     * @return Error Response Object<br> HttpStatusCode : 406 - Not Acceptable
+     * @see java.lang.IllegalAccessException
+     */
+    protected ResponseEntity<Object> handleIllegalAccessException(IllegalAccessException ex,
+        WebRequest request) {
+        log.error("handleIllegalAccessException : {0}", ex);
+        HttpHeaders headers = new HttpHeaders();
+        return super.handleExceptionInternal(ex, createErrorResponse(ILLEGAL_ACCESS), headers,
+            HttpStatus.INTERNAL_SERVER_ERROR, request);
+    }
 
-		Set<HttpMethod> supportedMethods = ex.getSupportedHttpMethods();
-		if (!CollectionUtils.isEmpty(supportedMethods)) {
-			headers.setAllow(supportedMethods);
-		}
-		return super.handleExceptionInternal(ex, createErrorResponse(HTTP_REQUEST_METHOD_NOT_SUPPORTED), headers,
-			status, request);
-	}
+    /**
+     * HttpRequestMethodNotSupportedException
+     *
+     * @return Error Response Object<br> HttpStatusCode : 405 - Method Not Allowed
+     * @see org.springframework.web.HttpRequestMethodNotSupportedException
+     */
+    protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(
+        HttpRequestMethodNotSupportedException ex,
+        HttpHeaders headers, HttpStatus status, WebRequest request) {
+        log.error("handleHttpRequestMethodNotSupported : {0}", ex);
 
-	/**
-	 * HttpMediaTypeNotSupportedException
-	 *
-	 * @return Error Response Object<br>
-	 * HttpStatusCode : 415 - Unsupported Media Type
-	 * @see org.springframework.web.HttpMediaTypeNotSupportedException
-	 */
-	protected ResponseEntity<Object> handleHttpMediaTypeNotSupported(HttpMediaTypeNotSupportedException ex,
-		HttpHeaders headers, HttpStatus status, WebRequest request) {
-		log.error("handleHttpMediaTypeNotSupported : {0}", ex);
+        Set<HttpMethod> supportedMethods = ex.getSupportedHttpMethods();
+        if (!CollectionUtils.isEmpty(supportedMethods)) {
+            headers.setAllow(supportedMethods);
+        }
+        return super.handleExceptionInternal(ex,
+            createErrorResponse(HTTP_REQUEST_METHOD_NOT_SUPPORTED),
+            headers,
+            status, request);
+    }
 
-		List<MediaType> mediaTypes = ex.getSupportedMediaTypes();
-		if (!CollectionUtils.isEmpty(mediaTypes)) {
-			headers.setAccept(mediaTypes);
-			if (request instanceof ServletWebRequest servletWebRequest
-				&& HttpMethod.PATCH.equals(servletWebRequest.getHttpMethod())) {
-				headers.setAcceptPatch(mediaTypes);
-			}
-		}
+    /**
+     * HttpMediaTypeNotSupportedException
+     *
+     * @return Error Response Object<br> HttpStatusCode : 415 - Unsupported Media Type
+     * @see org.springframework.web.HttpMediaTypeNotSupportedException
+     */
+    protected ResponseEntity<Object> handleHttpMediaTypeNotSupported(
+        HttpMediaTypeNotSupportedException ex,
+        HttpHeaders headers, HttpStatus status, WebRequest request) {
+        log.error("handleHttpMediaTypeNotSupported : {0}", ex);
 
-		return super.handleExceptionInternal(ex, createErrorResponse(HTTP_REQUEST_METHOD_NOT_SUPPORTED), headers,
-			status, request);
-	}
+        List<MediaType> mediaTypes = ex.getSupportedMediaTypes();
+        if (!CollectionUtils.isEmpty(mediaTypes)) {
+            headers.setAccept(mediaTypes);
+            if (request instanceof ServletWebRequest servletWebRequest
+                && HttpMethod.PATCH.equals(servletWebRequest.getHttpMethod())) {
+                headers.setAcceptPatch(mediaTypes);
+            }
+        }
 
-	/**
-	 * HttpMediaTypeNotSupportedException
-	 *
-	 * @return Error Response Object<br>
-	 * HttpStatusCode : 406 - Not Acceptable
-	 * @see org.springframework.web.HttpMediaTypeNotAcceptableException
-	 */
-	protected ResponseEntity<Object> handleHttpMediaTypeNotAcceptable(HttpMediaTypeNotAcceptableException ex,
-		HttpHeaders headers, HttpStatus status, WebRequest request) {
-		log.error("handleHttpMediaTypeNotAcceptable : {0}", ex);
-		return super.handleExceptionInternal(ex, createErrorResponse(HTTP_MEDIA_TYPE_NOT_ACCEPTABLE), headers, status,
-			request);
-	}
+        return super.handleExceptionInternal(ex,
+            createErrorResponse(HTTP_REQUEST_METHOD_NOT_SUPPORTED),
+            headers,
+            status, request);
+    }
 
-	/**
-	 * MissingPathVariableException
-	 *
-	 * @return Error Response Object<br>
-	 * HttpStatusCode : 500 - Internal Server Error
-	 * @see org.springframework.web.bind.MissingPathVariableException
-	 */
-	protected ResponseEntity<Object> handleMissingPathVariable(MissingPathVariableException ex, HttpHeaders headers,
-		HttpStatus status, WebRequest request) {
-		log.error("handleMissingPathVariable : {0}", ex);
-		return super.handleExceptionInternal(ex, createErrorResponse(MISSING_PATH_VARIABLE), headers, status, request);
-	}
+    /**
+     * HttpMediaTypeNotSupportedException
+     *
+     * @return Error Response Object<br> HttpStatusCode : 406 - Not Acceptable
+     * @see org.springframework.web.HttpMediaTypeNotAcceptableException
+     */
+    protected ResponseEntity<Object> handleHttpMediaTypeNotAcceptable(
+        HttpMediaTypeNotAcceptableException ex,
+        HttpHeaders headers, HttpStatus status, WebRequest request) {
+        log.error("handleHttpMediaTypeNotAcceptable : {0}", ex);
+        return super.handleExceptionInternal(ex,
+            createErrorResponse(HTTP_MEDIA_TYPE_NOT_ACCEPTABLE),
+            headers, status,
+            request);
+    }
 
-	/**
-	 * MissingServletRequestParameterException
-	 *
-	 * @return Error Response Object<br>
-	 * HttpStatusCode : 400 - Bad Request
-	 * @see org.springframework.web.bind.MissingServletRequestParameterException
-	 */
-	protected ResponseEntity<Object> handleMissingServletRequestParameter(MissingServletRequestParameterException ex,
-		HttpHeaders headers, HttpStatus status, WebRequest request) {
-		log.error("handleMissingServletRequestParameter : {0}", ex);
-		return super.handleExceptionInternal(ex, createErrorResponse(MISSING_SERVLET_REQUEST_PARAMETER), headers,
-			status, request);
-	}
+    /**
+     * MissingPathVariableException
+     *
+     * @return Error Response Object<br> HttpStatusCode : 500 - Internal Server Error
+     * @see org.springframework.web.bind.MissingPathVariableException
+     */
+    protected ResponseEntity<Object> handleMissingPathVariable(MissingPathVariableException ex,
+        HttpHeaders headers,
+        HttpStatus status, WebRequest request) {
+        log.error("handleMissingPathVariable : {0}", ex);
+        return super.handleExceptionInternal(ex, createErrorResponse(MISSING_PATH_VARIABLE),
+            headers,
+            status, request);
+    }
 
-	/**
-	 * ServletRequestBindingException
-	 *
-	 * @return Error Response Object<br>
-	 * HttpStatusCode : 400 - Bad Request
-	 * @see org.springframework.web.bind.ServletRequestBindingException
-	 */
-	protected ResponseEntity<Object> handleServletRequestBindingException(ServletRequestBindingException ex,
-		HttpHeaders headers, HttpStatus status, WebRequest request) {
-		log.error("handleServletRequestBindingException : {0}", ex);
-		return super.handleExceptionInternal(ex, createErrorResponse(SERVLET_REQUEST_BINDING), headers, status,
-			request);
-	}
+    /**
+     * MissingServletRequestParameterException
+     *
+     * @return Error Response Object<br> HttpStatusCode : 400 - Bad Request
+     * @see org.springframework.web.bind.MissingServletRequestParameterException
+     */
+    protected ResponseEntity<Object> handleMissingServletRequestParameter(
+        MissingServletRequestParameterException ex,
+        HttpHeaders headers, HttpStatus status, WebRequest request) {
+        log.error("handleMissingServletRequestParameter : {0}", ex);
+        return super.handleExceptionInternal(ex,
+            createErrorResponse(MISSING_SERVLET_REQUEST_PARAMETER),
+            headers,
+            status, request);
+    }
 
-	/**
-	 * ConversionNotSupportedException
-	 *
-	 * @return Error Response Object<br>
-	 * HttpStatusCode : 500 - Internal Server Error
-	 * @see org.springframework.beans.ConversionNotSupportedException
-	 */
-	protected ResponseEntity<Object> handleConversionNotSupported(ConversionNotSupportedException ex,
-		HttpHeaders headers,
-		HttpStatus status, WebRequest request) {
-		log.error("handleConversionNotSupported : {0}", ex);
-		return super.handleExceptionInternal(ex, createErrorResponse(CONVERSION_NOT_SUPPORTED), headers, status,
-			request);
-	}
+    /**
+     * ServletRequestBindingException
+     *
+     * @return Error Response Object<br> HttpStatusCode : 400 - Bad Request
+     * @see org.springframework.web.bind.ServletRequestBindingException
+     */
+    protected ResponseEntity<Object> handleServletRequestBindingException(
+        ServletRequestBindingException ex,
+        HttpHeaders headers, HttpStatus status, WebRequest request) {
+        log.error("handleServletRequestBindingException : {0}", ex);
+        return super.handleExceptionInternal(ex, createErrorResponse(SERVLET_REQUEST_BINDING),
+            headers,
+            status,
+            request);
+    }
 
-	/**
-	 * TypeMismatchException
-	 *
-	 * @return Error Response Object<br>
-	 * HttpStatusCode : 400 - Bad Request
-	 * @see org.springframework.beans.TypeMismatchException
-	 */
-	protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers,
-		HttpStatus status,
-		WebRequest request) {
-		log.error("handleTypeMismatch : {0}", ex);
-		return super.handleExceptionInternal(ex, createErrorResponse(TYPE_MISMATCH), headers, status, request);
-	}
+    /**
+     * ConversionNotSupportedException
+     *
+     * @return Error Response Object<br> HttpStatusCode : 500 - Internal Server Error
+     * @see org.springframework.beans.ConversionNotSupportedException
+     */
+    protected ResponseEntity<Object> handleConversionNotSupported(
+        ConversionNotSupportedException ex,
+        HttpHeaders headers,
+        HttpStatus status, WebRequest request) {
+        log.error("handleConversionNotSupported : {0}", ex);
+        return super.handleExceptionInternal(ex, createErrorResponse(CONVERSION_NOT_SUPPORTED),
+            headers,
+            status,
+            request);
+    }
 
-	/**
-	 * HttpMessageNotReadableException
-	 *
-	 * @return Error Response Object<br>
-	 * HttpStatusCode : 400 - Bad Request
-	 * @see org.springframework.http.converter.HttpMessageNotReadableException
-	 */
-	protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
-		HttpHeaders headers, HttpStatus status, WebRequest request) {
-		log.error("handleHttpMessageNotReadable : {0}", ex);
-		return super.handleExceptionInternal(ex, createErrorResponse(HTTP_MESSAGE_NOT_READABLE), headers, status,
-			request);
-	}
+    /**
+     * TypeMismatchException
+     *
+     * @return Error Response Object<br> HttpStatusCode : 400 - Bad Request
+     * @see org.springframework.beans.TypeMismatchException
+     */
+    protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex,
+        HttpHeaders headers,
+        HttpStatus status,
+        WebRequest request) {
+        log.error("handleTypeMismatch : {0}", ex);
+        return super.handleExceptionInternal(ex, createErrorResponse(TYPE_MISMATCH), headers,
+            status,
+            request);
+    }
 
-	/**
-	 * HttpMessageNotWritableException
-	 *
-	 * @return Error Response Object<br>
-	 * HttpStatusCode : 500 - Internal Server Error
-	 * @see org.springframework.http.converter.HttpMessageNotWritableException
-	 */
-	protected ResponseEntity<Object> handleHttpMessageNotWritable(HttpMessageNotWritableException ex,
-		HttpHeaders headers,
-		HttpStatus status, WebRequest request) {
-		log.error("handleHttpMessageNotWritable : {0}", ex);
-		return super.handleExceptionInternal(ex, createErrorResponse(HTTP_MESSAGE_NOT_WRITABLE), headers, status,
-			request);
-	}
+    /**
+     * HttpMessageNotReadableException
+     *
+     * @return Error Response Object<br> HttpStatusCode : 400 - Bad Request
+     * @see org.springframework.http.converter.HttpMessageNotReadableException
+     */
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(
+        HttpMessageNotReadableException ex,
+        HttpHeaders headers, HttpStatus status, WebRequest request) {
+        log.error("handleHttpMessageNotReadable : {0}", ex);
+        return super.handleExceptionInternal(ex, createErrorResponse(HTTP_MESSAGE_NOT_READABLE),
+            headers, status,
+            request);
+    }
 
-	/**
-	 * MethodArgumentNotValidException
-	 *
-	 * @return Error Response Object<br>
-	 * HttpStatusCode : 400 - Bad Request
-	 * @see org.springframework.web.bind.MethodArgumentNotValidException
-	 */
-	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
-		HttpHeaders headers, HttpStatus status, WebRequest request) {
-		log.error("handleMethodArgumentNotValid : {0}", ex);
+    /**
+     * HttpMessageNotWritableException
+     *
+     * @return Error Response Object<br> HttpStatusCode : 500 - Internal Server Error
+     * @see org.springframework.http.converter.HttpMessageNotWritableException
+     */
+    protected ResponseEntity<Object> handleHttpMessageNotWritable(
+        HttpMessageNotWritableException ex,
+        HttpHeaders headers,
+        HttpStatus status, WebRequest request) {
+        log.error("handleHttpMessageNotWritable : {0}", ex);
+        return super.handleExceptionInternal(ex, createErrorResponse(HTTP_MESSAGE_NOT_WRITABLE),
+            headers, status,
+            request);
+    }
 
-		List<String> errors = ex.getBindingResult()
-			.getFieldErrors()
-			.stream()
-			.map(FieldError::getDefaultMessage)
-			.toList();
+    /**
+     * MethodArgumentNotValidException
+     *
+     * @return Error Response Object<br> HttpStatusCode : 400 - Bad Request
+     * @see org.springframework.web.bind.MethodArgumentNotValidException
+     */
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(
+        MethodArgumentNotValidException ex,
+        HttpHeaders headers, HttpStatus status, WebRequest request) {
+        log.error("handleMethodArgumentNotValid : {0}", ex);
 
-		ErrorResponse errorResponse = createErrorResponse(METHOD_ARGUMENT_NOT_VALID);
-		errorResponse.setErrors(errors);
+        List<String> errors = ex.getBindingResult()
+            .getFieldErrors()
+            .stream()
+            .map(FieldError::getDefaultMessage)
+            .toList();
 
-		return super.handleExceptionInternal(ex, errorResponse, headers, status, request);
-	}
+        ErrorResponse errorResponse = createErrorResponse(METHOD_ARGUMENT_NOT_VALID);
+        errorResponse.setErrors(errors);
 
-	/**
-	 * MissingServletRequestPartException
-	 *
-	 * @return Error Response Object<br>
-	 * HttpStatusCode : 400 - Bad Request
-	 * @see org.springframework.web.multipart.support.MissingServletRequestPartException
-	 */
-	protected ResponseEntity<Object> handleMissingServletRequestPart(MissingServletRequestPartException ex,
-		HttpHeaders headers, HttpStatus status, WebRequest request) {
-		log.error("handleMissingServletRequestPart : {0}", ex);
-		return super.handleExceptionInternal(ex, createErrorResponse(MISSING_SERVLET_REQUEST_PART), headers, status,
-			request);
-	}
+        return super.handleExceptionInternal(ex, errorResponse, headers, status, request);
+    }
 
-	/**
-	 * BindException
-	 *
-	 * @return Error Response Object<br>
-	 * HttpStatusCode : 400 - Bad Request
-	 * @see org.springframework.validation.BindException
-	 */
-	protected ResponseEntity<Object> handleBindException(BindException ex, HttpHeaders headers, HttpStatus status,
-		WebRequest request) {
-		log.error("handleBindException : {0}", ex);
+    /**
+     * MissingServletRequestPartException
+     *
+     * @return Error Response Object<br> HttpStatusCode : 400 - Bad Request
+     * @see org.springframework.web.multipart.support.MissingServletRequestPartException
+     */
+    protected ResponseEntity<Object> handleMissingServletRequestPart(
+        MissingServletRequestPartException ex,
+        HttpHeaders headers, HttpStatus status, WebRequest request) {
+        log.error("handleMissingServletRequestPart : {0}", ex);
+        return super.handleExceptionInternal(ex, createErrorResponse(MISSING_SERVLET_REQUEST_PART),
+            headers, status,
+            request);
+    }
 
-		List<String> errors = ex.getBindingResult()
-			.getFieldErrors()
-			.stream()
-			.map(FieldError::getDefaultMessage)
-			.toList();
+    /**
+     * BindException
+     *
+     * @return Error Response Object<br> HttpStatusCode : 400 - Bad Request
+     * @see org.springframework.validation.BindException
+     */
+    protected ResponseEntity<Object> handleBindException(BindException ex, HttpHeaders headers,
+        HttpStatus status,
+        WebRequest request) {
+        log.error("handleBindException : {0}", ex);
 
-		ErrorResponse errorResponse = createErrorResponse(BIND_ERROR);
-		errorResponse.setErrors(errors);
+        List<String> errors = ex.getBindingResult()
+            .getFieldErrors()
+            .stream()
+            .map(FieldError::getDefaultMessage)
+            .toList();
 
-		return super.handleExceptionInternal(ex, errorResponse, headers, status, request);
-	}
+        ErrorResponse errorResponse = createErrorResponse(BIND_ERROR);
+        errorResponse.setErrors(errors);
 
-	/**
-	 * NoHandlerFoundException
-	 *
-	 * @return Error Response Object<br>
-	 * HttpStatusCode : 404 - Not Found
-	 * @see org.springframework.web.servlet.NoHandlerFoundException
-	 */
-	protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers,
-		HttpStatus status, WebRequest request) {
-		log.error("handleNoHandlerFoundException : {0}", ex);
-		return super.handleExceptionInternal(ex, createErrorResponse(NO_HANDLER_FOUND), headers, status, request);
-	}
+        return super.handleExceptionInternal(ex, errorResponse, headers, status, request);
+    }
 
-	/**
-	 * AsyncRequestTimeoutException
-	 *
-	 * @return Error Response Object<Br>
-	 * HttpStatusCode : 503 - Service Unavailable
-	 * @see org.springframework.web.context.request.async.AsyncRequestTimeoutException
-	 */
-	protected ResponseEntity<Object> handleAsyncRequestTimeoutException(AsyncRequestTimeoutException ex,
-		HttpHeaders headers, HttpStatus status, WebRequest webRequest) {
-		log.error("handleAsyncRequestTimeoutException : {0}", ex);
+    /**
+     * NoHandlerFoundException
+     *
+     * @return Error Response Object<br> HttpStatusCode : 404 - Not Found
+     * @see org.springframework.web.servlet.NoHandlerFoundException
+     */
+    protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex,
+        HttpHeaders headers,
+        HttpStatus status, WebRequest request) {
+        log.error("handleNoHandlerFoundException : {0}", ex);
+        return super.handleExceptionInternal(ex, createErrorResponse(NO_HANDLER_FOUND), headers,
+            status,
+            request);
+    }
 
-		if (webRequest instanceof ServletWebRequest servletWebRequest) {
-			HttpServletResponse response = servletWebRequest.getResponse();
-			if (response != null && response.isCommitted()) {
-				if (logger.isWarnEnabled()) {
-					logger.warn("Async request timed out");
-				}
-				return null;
-			}
-		}
+    /**
+     * AsyncRequestTimeoutException
+     *
+     * @return Error Response Object<Br> HttpStatusCode : 503 - Service Unavailable
+     * @see org.springframework.web.context.request.async.AsyncRequestTimeoutException
+     */
+    protected ResponseEntity<Object> handleAsyncRequestTimeoutException(
+        AsyncRequestTimeoutException ex,
+        HttpHeaders headers, HttpStatus status, WebRequest webRequest) {
+        log.error("handleAsyncRequestTimeoutException : {0}", ex);
 
-		return super.handleExceptionInternal(ex, createErrorResponse(GlobalErrorCode.ASYNC_REQUEST_TIMEOUT), headers,
-			status, webRequest);
-	}
+        if (webRequest instanceof ServletWebRequest servletWebRequest) {
+            HttpServletResponse response = servletWebRequest.getResponse();
+            if (response != null && response.isCommitted()) {
+                if (logger.isWarnEnabled()) {
+                    logger.warn("Async request timed out");
+                }
+                return null;
+            }
+        }
 
-	/**
-	 * ErrorResponse 객체 생성
-	 *
-	 * @param errorCode 에러코드
-	 * @return ErrorResponse Object
-	 */
-	private ErrorResponse createErrorResponse(BaseErrorCode errorCode) {
-		return new ErrorResponse(errorCode);
-	}
+        return super.handleExceptionInternal(ex,
+            createErrorResponse(GlobalErrorCode.ASYNC_REQUEST_TIMEOUT), headers,
+            status, webRequest);
+    }
 
-	/**
-	 * ErrorResponse 객체 생성
-	 *
-	 * @param errorCode 에러코드
-	 * @param message   클라이언트 메시지
-	 * @return ErrorResponse Object
-	 */
-	private ErrorResponse createErrorResponse(BaseErrorCode errorCode, String message) {
-		return new ErrorResponse(errorCode, message);
-	}
+    /**
+     * ErrorResponse 객체 생성
+     *
+     * @param errorCode 에러코드
+     * @return ErrorResponse Object
+     */
+    private ErrorResponse createErrorResponse(BaseErrorCode errorCode) {
+        return new ErrorResponse(errorCode);
+    }
+
+    /**
+     * ErrorResponse 객체 생성
+     *
+     * @param errorCode 에러코드
+     * @param message   클라이언트 메시지
+     * @return ErrorResponse Object
+     */
+    private ErrorResponse createErrorResponse(BaseErrorCode errorCode, String message) {
+        return new ErrorResponse(errorCode, message);
+    }
 
 }

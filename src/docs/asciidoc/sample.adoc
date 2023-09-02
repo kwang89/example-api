@@ -1,0 +1,7 @@
+[#sample-api]
+== SAMPLE
+
+[#sample-exception]
+=== Exception API
+
+operation::sample/exception[snippets='curl-request,response-fields,http-response']

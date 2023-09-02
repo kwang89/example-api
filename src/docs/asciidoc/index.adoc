@@ -7,11 +7,8 @@ v0.1, 2023-04-15
 :toc: left
 :sectlinks:
 
-[#sample-api]
-== SAMPLE
+==
 
-[#sample-exception]
-=== Exception API
-
-operation::sample/exception[snippets='curl-request,response-fields,http-response']
+== API
+include::sample.adoc[]
 
