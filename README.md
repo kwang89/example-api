@@ -44,7 +44,7 @@
 - ConsoleAppender
 
   | application.yml                   | logback-spring.xml            | 설명                           | Default 값                                                                             |
-      |-----------------------------------|-------------------------------|:-----------------------------|:--------------------------------------------------------------------------------------|
+  |-----------------------------------|-------------------------------|:-----------------------------|:--------------------------------------------------------------------------------------|
   | logging.pattern.console           | CONSOLE_LOG_PATTERN           | 콘솔에서 사용할 로그 패턴               | _${LOG_DATEFORMAT_PATTERN}_ _${LOG_LEVEL_PATTERN}_ _${PID}_ - [%t] %logger{20} : %m%n |
   | logging.pattern.dateformat        | LOG_DATEFORMAT_PATTERN        | 로그 날짜 포맷에 사용할 Appender 패턴    | yyyy-MM-dd'T'HH:mm:ss.SSS                                                             |  
   | logging.pattern.level             | LOG_LEVEL_PATTERN             | 로그 레벨을 렌더링할 때 사용할 포맷         | %.-1p                                                                                 |  
@@ -53,7 +53,7 @@
 - FileAppender
 
   | application.yml                                      | logback-spring.xml                           | 설명                                    | Default 값                                                                             |
-      |------------------------------------------------------|----------------------------------------------|:--------------------------------------|:--------------------------------------------------------------------------------------|
+  |------------------------------------------------------|----------------------------------------------|:--------------------------------------|:--------------------------------------------------------------------------------------|
   | logging.pattern.file                                 | FILE_LOG_PATTERN                             | 파일에서 사용할 로그 패턴                        | _${LOG_DATEFORMAT_PATTERN}_ _${LOG_LEVEL_PATTERN}_ _${PID}_ - [%t] %logger{20} : %m%n |
   | logging.pattern.dateformat                           | LOG_DATEFORMAT_PATTERN                       | 로그 날짜 포맷에 사용할 Appender 패턴             | yyyy-MM-dd'T'HH:mm:ss.SSS                                                             |
   | logging.pattern.level                                | LOG_LEVEL_PATTERN                            | 로그 레벨을 렌더링할 때 사용할 포맷                  | %.-1p                                                                                 |
@@ -105,8 +105,8 @@
   ```
 - ErrorResponse 속성
 
-  | Type         | Name         | Required | Description            |
-    |--------------|--------------|----------|:-----------------------|
+  | Type         | Name         | Required | Description            | 
+  |--------------|--------------|----------|:-----------------------|
   | String       | errorCode    | Y        | 에러코드                   |
   | String       | errorMessage | Y        | 에러메시지                  |
   | Object       | data         | N        | 에러발생 시 전달한 데이터         |
