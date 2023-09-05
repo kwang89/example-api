@@ -94,7 +94,6 @@
   {
     "errorCode": "error-000001",
     "errorMessage": "Unkwon Error",
-    "meesage": "화면에 보이는 메세지",
     "data": {
       "name": "test",
       "age": "99"
@@ -110,7 +109,6 @@
     |--------------|--------------|----------|:-----------------------|
   | String       | errorCode    | Y        | 에러코드                   |
   | String       | errorMessage | Y        | 에러메시지                  |
-  | String       | message      | N        | 화면에 보여줄 메시지            |
   | Object       | data         | N        | 에러발생 시 전달한 데이터         |
   | List<String> | errors       | N        | `@Valid`로 검증실패 한 에러 목록 |
 
@@ -159,7 +157,7 @@
 
 ## Util
 
-- com.example.api.document
+- com.example.project.document
     - FileUtil : 파일
 - com.google.common.base(Guava)
     - [String 관련 Util](https://github.com/google/guava/wiki/StringsExplained)
