@@ -16,9 +16,15 @@ import org.springframework.http.HttpStatus;
 public class InternalServerErrorException extends BaseException {
 
     private Object data;
+    private Object[] messageArgs;
 
     public InternalServerErrorException(BaseErrorCode errorCode) {
         super(HttpStatus.INTERNAL_SERVER_ERROR, errorCode);
+    }
+
+    public InternalServerErrorException(BaseErrorCode errorCode, Object... messageArgs) {
+        super(HttpStatus.INTERNAL_SERVER_ERROR, errorCode);
+        this.messageArgs = messageArgs;
     }
 
     public InternalServerErrorException(BaseErrorCode errorCode, Object data) {

@@ -17,7 +17,7 @@ public class SampleController {
 
     @GetMapping("/exception")
     public void error() {
-        throw new InternalServerErrorException(GlobalErrorCode.SAMPLE_ERROR);
+        throw new InternalServerErrorException(GlobalErrorCode.SAMPLE_ERROR, "test1", 2, "test3");
     }
 
     @PostMapping("/xss")

@@ -224,7 +224,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         log.error("handleInternalServerErrorException : {0}", ex);
         HttpHeaders headers = new HttpHeaders();
 
-        ErrorResponse errorResponse = createErrorResponse(ex.getErrorCode());
+        ErrorResponse errorResponse = createErrorResponse(ex.getErrorCode(), ex.getMessageArgs());
 
         if (!ObjectUtils.isEmpty(ex.getData())) {
             errorResponse.setData(ex.getData());
@@ -534,15 +534,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ErrorResponse(errorCode);
     }
 
-    /**
-     * ErrorResponse 객체 생성
-     *
-     * @param errorCode 에러코드
-     * @param message   클라이언트 메시지
-     * @return ErrorResponse Object
-     */
-    private ErrorResponse createErrorResponse(BaseErrorCode errorCode, String message) {
-        return new ErrorResponse(errorCode, message);
+    private ErrorResponse createErrorResponse(BaseErrorCode errorCode, Object[] messageArgs) {
+        return new ErrorResponse(errorCode, messageArgs);
     }
 
 }

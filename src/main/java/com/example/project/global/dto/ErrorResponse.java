@@ -1,6 +1,7 @@
 package com.example.project.global.dto;
 
 import com.example.project.global.code.base.BaseErrorCode;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,11 +21,7 @@ public class ErrorResponse extends BaseDto {
     /**
      * 에러코드
      */
-    private String errorCode;
-    /**
-     * 화면에 표시될 메시지
-     */
-    private String errorMessage;
+    private BaseErrorCode errorCode;
     /**
      * validation 에러 목록(Optional)
      */
@@ -34,20 +31,21 @@ public class ErrorResponse extends BaseDto {
      */
     private Object data;
 
-    public ErrorResponse(BaseErrorCode errorCode) {
-        this.errorCode = errorCode.getErrorCode();
-    }
+    @JsonIgnore
+    private Object[] messageArgs;
 
-    public ErrorResponse(BaseErrorCode errorCode, String errorMessage) {
-        this(errorCode);
-        this.errorMessage = errorMessage;
+    public ErrorResponse(BaseErrorCode errorCode) {
+        this.errorCode = errorCode;
+    }
+    public ErrorResponse(BaseErrorCode errorCode, Object[] messageArgs) {
+        this.errorCode = errorCode;
+        this.messageArgs = messageArgs;
     }
 
     @Builder
-    public ErrorResponse(String errorCode, String errorMessage, List<String> errors,
+    public ErrorResponse(BaseErrorCode errorCode, List<String> errors,
         Object data) {
         this.errorCode = errorCode;
-        this.errorMessage = errorMessage;
         this.errors = errors;
         this.data = data;
     }
