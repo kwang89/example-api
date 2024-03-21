@@ -1,6 +1,6 @@
 plugins {
-    id("org.springframework.boot") version "3.1.3"
-    id("io.spring.dependency-management") version "1.1.3"
+    id("org.springframework.boot") version "3.2.3"
+    id("io.spring.dependency-management") version "1.1.4"
     id("org.asciidoctor.jvm.convert") version "3.3.2"
     id("com.epages.restdocs-api-spec") version "0.18.2"
     id("org.ec4j.editorconfig") version "0.0.3"
@@ -65,6 +65,8 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok")
     // H2
     runtimeOnly("com.h2database:h2")
+
+    implementation("org.apache.httpcomponents.client5:httpclient5")
 }
 
 tasks {

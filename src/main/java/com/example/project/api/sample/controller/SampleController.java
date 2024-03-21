@@ -1,5 +1,8 @@
 package com.example.project.api.sample.controller;
 
+import java.util.List;
+import java.util.stream.Stream;
+
 import com.example.project.global.code.GlobalErrorCode;
 import com.example.project.global.exception.InternalServerErrorException;
 import com.example.project.api.sample.dto.ExampleDto;
@@ -19,6 +22,26 @@ public class SampleController {
     public void error() {
         throw new InternalServerErrorException(GlobalErrorCode.SAMPLE_ERROR, "test1", 2, "test3");
     }
+
+
+    @GetMapping("/list")
+    public List<ExampleDto> list() {
+        return Stream.iterate(1L, n -> n+1).limit(5).map(
+            n -> ExampleDto.builder()
+                .age(n.intValue())
+                .testNm("test nm - " + n)
+                .content("content - " + n)
+                .longData(n)
+                .build()
+
+        ).toList();
+    }
+
+    // @GetMapping("/call")
+    // public List<ExampleDto> call() {
+    //
+    // }
+
 
     @PostMapping("/xss")
     public ExampleDto xss(@RequestBody ExampleDto dto) {

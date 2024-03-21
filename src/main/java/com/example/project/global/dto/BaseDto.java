@@ -3,7 +3,7 @@ package com.example.project.global.dto;
 import com.example.project.constant.CharacterConstant;
 import com.example.project.global.code.GlobalErrorCode;
 import com.example.project.global.exception.InternalServerErrorException;
-import com.example.project.global.masking.MaskingField;
+import com.example.project.global.annotation.masking.MaskingField;
 import com.google.common.base.MoreObjects;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;

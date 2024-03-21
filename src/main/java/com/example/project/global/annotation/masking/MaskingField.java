@@ -1,4 +1,4 @@
-package com.example.project.global.masking;
+package com.example.project.global.annotation.masking;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

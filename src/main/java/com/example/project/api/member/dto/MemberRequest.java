@@ -1,6 +1,7 @@
 package com.example.project.api.member.dto;
 
-import com.example.project.api.sample.dto.ExampleDto;
+import com.example.project.global.dto.BaseDto;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +10,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-public class MemberRequest extends ExampleDto {
+public class MemberRequest extends BaseDto {
 
     private Long id;
     private String name;

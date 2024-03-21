@@ -32,3 +32,13 @@ server:
   error:
     whitelabel:
       enabled: false # default error page disabled
+
+example:
+  http:
+    http-component: # Milliseconds 단위
+      connection-timeout: 3000
+      connection-request-timeout: 3000
+      socket-timeout: 30000
+      max-conn-total: 1000
+      max-conn-per-route: 500
+      keep-alive: 300000

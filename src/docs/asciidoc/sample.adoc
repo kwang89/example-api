@@ -4,4 +4,4 @@
 [#sample-exception]
 === Exception API
 
-operation::sample/exception[snippets='curl-request,response-fields,http-response']
+operation::book-controller-docs-test/exception[snippets='curl-request,response-fields,http-response']
