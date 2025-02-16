@@ -1,9 +1,9 @@
 plugins {
-    id("org.springframework.boot") version "3.1.3"
-    id("io.spring.dependency-management") version "1.1.3"
-    id("org.asciidoctor.jvm.convert") version "3.3.2"
-    id("com.epages.restdocs-api-spec") version "0.18.2"
-    id("org.ec4j.editorconfig") version "0.0.3"
+    id("org.springframework.boot") version "3.4.2"
+    id("io.spring.dependency-management") version "1.1.7"
+    id("org.asciidoctor.jvm.convert") version "4.0.4"
+    id("com.epages.restdocs-api-spec") version "0.19.4"
+    id("org.ec4j.editorconfig") version "0.1.0"
     java
 //    id "checkstyle"
 }
@@ -12,7 +12,7 @@ group = "com.example"
 version = "0.0.1-SNAPSHOT"
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_21
 }
 
 configurations {
@@ -31,10 +31,13 @@ var snippetsDir by extra(file("build/generated-snippets"))
 
 dependencies {
 
-    val mapstructVersion = "1.5.5.Final"
-    val guavaVersion = "32.1.2-jre"
-    val commonTextVersion = "1.10.0"
-    val epagesVersion = "0.18.2"
+    val mapstructVersion = "1.6.3"
+    val guavaVersion = "33.4.0-jre"
+    val apacheTextVersion = "1.13.0"
+    val apacheCollectionsVersion = "4.4"
+    val apacheLangVersion = "3.17.0"
+    val apacheIoVersion = "2.18.0"
+    val epagesVersion = "0.19.4"
 
     // Spring
     // implementation "org.springframework.boot:spring-boot-starter-security"
@@ -58,8 +61,11 @@ dependencies {
 
     // guava
     implementation("com.google.guava:guava:$guavaVersion")
-    // apache common text
-    implementation("org.apache.commons:commons-text:$commonTextVersion")
+    // apache common
+    implementation("org.apache.commons:commons-text:$apacheTextVersion")
+    implementation("org.apache.commons:commons-collections4:$apacheCollectionsVersion")
+    implementation("org.apache.commons:commons-lang3:$apacheLangVersion")
+    implementation("commons-io:commons-io:$apacheIoVersion")
     // lombok
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")

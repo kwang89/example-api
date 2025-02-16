@@ -10,12 +10,12 @@
 
 ## 버전(2023.04.15 기준)
 
-| 구분          | Version     | 설명                                           |
-|-------------|-------------|----------------------------------------------|
-| Java        | 17          | Eclipse temurin                              |
-| Spring Boot | 3.0.5       | Spring 6버전 사용. boot-starter들은 해당 버전을 기준으로 사용 |
-| MapStruct   | 1.5.4.Final | DTO간 데이터 맵핑                                  |
-| Guava       | 31.1-jre    | Util Library                                 |
+| 구분          | Version  | 설명                                           |
+|-------------|----------|----------------------------------------------|
+| Java        | 21       | Eclipse temurin                              |
+| Spring Boot | 3.4.2    | Spring 6버전 사용. boot-starter들은 해당 버전을 기준으로 사용 |
+| MapStruct   | 1.6.3    | DTO간 데이터 맵핑                                  |
+| Guava       | 3.17.0 | Util Library                                 |
 
 ## TODO
 
@@ -26,11 +26,14 @@
 5. Sample CRUD
 6. 시작 시, 필요 데이터 로딩(H2)
 7. 화면 메시지 처리(DB로 관리 가능하도록, Redis 활용하여 캐싱)
-8. restdoc, swagger plugin
+8. restdoc, swagger plugin / 어떻게 자동화 할 방법 없나? AI 사용?
 9. junit5 테스트 코드 샘플
 10. redis 등 필요한 항목 docker로 올릴 수 있도록 docker-compose 파일
 11. Dockerfile
 12. github ci/cd pipeline
+13. Gradle MultiProject로 구조 변경
+14. 공통 응답 레이아웃 수정
+
 
 ## Jackson2ObjectMapperBuilderCustomizer
 
